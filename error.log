@@ -1,0 +1,64 @@
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:01"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:01"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:10"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:10"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:14"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:14"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:18"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:18"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:47"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:49:47"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:50:26"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:50:26"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:51:45"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:51:45"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:51:47"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:51:47"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:53:10"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:53:10"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:54:53"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:54:53"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:56:58"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:56:58"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:57:15"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:57:15"}
+{"error":{},"level":"error","message":"Failed to login","service":"profil-service","timestamp":"2025-01-05 18:57:21"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:58:04"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:58:04"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:58:21"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:58:21"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:58:43"}
+{"error":{},"level":"error","message":"Failed to get user from me endpoint","service":"profil-service","timestamp":"2025-01-05 18:58:43"}
+{"error":{},"id":"05221b28-193a-40c4-bd09-e2a4174ba68a","level":"error","message":"Error in updateProfil","service":"profil-service","timestamp":"2025-01-07 09:27:55"}
+{"error":{},"id":"05221b28-193a-40c4-bd09-e2a4174ba68a","level":"error","message":"Error in updateProfil","service":"profil-service","timestamp":"2025-01-07 09:30:09"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-24 18:55:39"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-24 18:56:15"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-24 18:57:21"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-24 18:58:17"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-24 18:59:04"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-24 19:00:05"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-24 19:00:12"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 08:09:53"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 08:10:06"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 08:10:54"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:45:12"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:46:31"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:47:11"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:48:18"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:49:41"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:51:49"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:53:07"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:53:11"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:53:14"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:53:14"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 14:54:45"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 18:37:34"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 18:45:05"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 18:45:39"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 18:50:05"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 18:50:13"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 18:50:21"}
+{"error":{},"level":"error","message":"Failed to register user","service":"profil-service","timestamp":"2025-01-25 18:50:59"}
+{"error":{},"level":"error","message":"Failed to retrieve profil by userId","service":"profil-service","timestamp":"2025-01-25 21:48:16","userId":"0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09"}
+{"error":{},"level":"error","message":"Failed to retrieve profil by userId","service":"profil-service","timestamp":"2025-01-25 21:49:40","userId":"0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09"}
+{"error":{},"level":"error","message":"Failed to retrieve profil by userId","service":"profil-service","timestamp":"2025-01-25 21:50:31","userId":"0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09"}

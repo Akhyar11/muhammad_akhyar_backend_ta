@@ -1,0 +1,7 @@
+.env
+/node_modules
+/uploads/*
+/db
+combined.log
+error.
+index.html
