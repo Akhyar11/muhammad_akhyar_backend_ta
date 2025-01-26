@@ -1,0 +1,20 @@
+[
+  {
+    "id": "29e9e48a-62e2-40ca-aa8a-721c3b56ab39",
+    "userId": "8cf92640-4420-40a3-b41e-fca733275737",
+    "height": "170",
+    "weight": "50",
+    "bmi": "17.301038062283737",
+    "date": "Fri Jan 24 2025 19:01:29 GMT+0700 (Indochina Time)",
+    "notes": "create_from_iot"
+  },
+  {
+    "id": "3b78a0d6-87ad-4041-ab9b-accecaceb37e",
+    "userId": "0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09",
+    "height": "170",
+    "weight": "50",
+    "bmi": "17.301038062283737",
+    "date": "Sun Jan 26 2025 20:24:59 GMT+0700 (Indochina Time)",
+    "notes": "create_from_iot"
+  }
+]

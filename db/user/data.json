@@ -1,0 +1,38 @@
+[
+  {
+    "id": "2059f080-e6ae-4e8d-aa17-d167fdab013c",
+    "username": "admin",
+    "password": "$2b$10$VFkfFZHJNxRM7VbxyNFNielzOOmzWMP.R60HJaV.OXC/g5G88pSB6",
+    "jk": true,
+    "tgl_lahir": "2024-12-20",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIwNTlmMDgwLWU2YWUtNGU4ZC1hYTE3LWQxNjdmZGFiMDEzYyIsInVzZXJuYW1lIjoiYWRtaW4xMjMiLCJpYXQiOjE3MzUwMzg4OTh9.vBx3AK-V5W8hFoiVSSVUvqfhCsaIFDa4cfN6deAxR8U",
+    "iotIsAllowed": false
+  },
+  {
+    "id": "8cf92640-4420-40a3-b41e-fca733275737",
+    "username": "Muhammad Akhyar",
+    "password": "$2b$10$9WoSg1I6sPBt6OcTFEKG/upnz7BFxWxabldsPA0ZEM3b/z/o5lyCC",
+    "jk": true,
+    "tgl_lahir": "2003-11-24",
+    "token": "",
+    "iotIsAllowed": false
+  },
+  {
+    "id": "edd4cc03-eca7-4b57-b8e6-6d6f76fff704",
+    "username": "test1",
+    "password": "$2b$10$b/Tjb/L6Xt4YMuKc0b8.euJoI.6Oc0PUrL65W2rDRk5/XUOfIlOgy",
+    "jk": true,
+    "tgl_lahir": "test",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVkZDRjYzAzLWVjYTctNGI1Ny1iOGU2LTZkNmY3NmZmZjcwNCIsInVzZXJuYW1lIjoidGVzdDEiLCJpYXQiOjE3Mzc3Njc1MjR9.qXSWaI39Clwyh5B7MscQ0uONuNWxOH5d83FvhsHGOPM",
+    "iotIsAllowed": false
+  },
+  {
+    "id": "0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09",
+    "username": "admin",
+    "password": "$2b$10$apG/Uej322h43jSDGw1fXOqmbqujpaWuPi0/C45UGLHKWNg8V8q4.",
+    "jk": true,
+    "tgl_lahir": "2000-11-11",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBiZDJkZTdlLWZlYjUtNGNlYy1iOGViLWNiNjIzOWQ3ZWQwOSIsInVzZXJuYW1lIjoiYWRtaW4xMjMiLCJpYXQiOjE3Mzc4MDYxODd9.7NYdJZJ0VpKtHFUL9ok9qmtRCXMYRCN0WvXigKW1V1M",
+    "iotIsAllowed": false
+  }
+]
