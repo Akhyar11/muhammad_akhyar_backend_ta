@@ -1,20 +1,29 @@
 [
   {
-    "id": "29e9e48a-62e2-40ca-aa8a-721c3b56ab39",
-    "userId": "8cf92640-4420-40a3-b41e-fca733275737",
+    "id": "45316164-6753-43b5-81a7-bec5908aaab9",
+    "userId": "0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09",
     "height": "170",
-    "weight": "50",
-    "bmi": "17.301038062283737",
-    "date": "Fri Jan 24 2025 19:01:29 GMT+0700 (Indochina Time)",
+    "weight": "60",
+    "bmi": "20.761245674740486",
+    "date": "Sat Feb 01 2025 08:55:41 GMT+0700 (Indochina Time)",
     "notes": "create_from_iot"
   },
   {
-    "id": "3b78a0d6-87ad-4041-ab9b-accecaceb37e",
+    "id": "4355f937-ac2b-4203-97db-9732cdbf1400",
     "userId": "0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09",
     "height": "170",
-    "weight": "50",
-    "bmi": "17.301038062283737",
-    "date": "Sun Jan 26 2025 20:24:59 GMT+0700 (Indochina Time)",
+    "weight": "60",
+    "bmi": "20.761245674740486",
+    "date": "Sat Feb 01 2025 09:06:48 GMT+0700 (Indochina Time)",
+    "notes": "create_from_iot"
+  },
+  {
+    "id": "2b4e13ef-0557-4af9-a9c8-cb780ef9db18",
+    "userId": "0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09",
+    "height": "170",
+    "weight": "60",
+    "bmi": "20.761245674740486",
+    "date": "Sat Feb 01 2025 09:09:34 GMT+0700 (Indochina Time)",
     "notes": "create_from_iot"
   }
 ]

@@ -62,3 +62,8 @@
 {"error":{},"level":"error","message":"Failed to retrieve profil by userId","service":"profil-service","timestamp":"2025-01-25 21:48:16","userId":"0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09"}
 {"error":{},"level":"error","message":"Failed to retrieve profil by userId","service":"profil-service","timestamp":"2025-01-25 21:49:40","userId":"0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09"}
 {"error":{},"level":"error","message":"Failed to retrieve profil by userId","service":"profil-service","timestamp":"2025-01-25 21:50:31","userId":"0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-26 22:57:41"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-26 22:58:07"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-26 22:59:17"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-31 09:57:28"}
+{"error":{},"level":"error","message":"Failed to save data in getData","service":"profil-service","timestamp":"2025-01-31 09:58:04"}

@@ -2,6 +2,8 @@ import { anthropometryModel } from "../antropomerty.model";
 import { Request, Response } from "express";
 import logger from "../../utils/logger.util"; // Import the logger
 import { userModel } from "../../user/user.model";
+import { groqCreateSummaryAnthropometry } from "../../groq/groq.service";
+import { profilModel } from "../../profil/profil.model";
 
 function calculateBMI(height: number, weight: number) {
   return `${weight / Math.pow(height / 100, 2)}`;
@@ -23,6 +25,7 @@ export default class AnthropometryIotController {
           height,
           weight,
         });
+
         res.status(400).json({ message: "Missing required fields" });
         return;
       }
@@ -49,6 +52,10 @@ export default class AnthropometryIotController {
         date,
         notes,
       });
+
+      const summary = await groqCreateSummaryAnthropometry(userId as string)
+      const profil = profilModel.search("userId", "==", userId)
+      profilModel.update(profil[0].id, { summary })
 
       // Return response
       res.status(200).json({ message: "Data saved successfully" });

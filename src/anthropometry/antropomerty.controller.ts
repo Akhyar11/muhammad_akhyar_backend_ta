@@ -8,17 +8,25 @@ export default class AnthropometryController {
     try {
       // Get id from request
       const { id } = req.params;
+      const { periode_awal, periode_akhir } = req.query;
 
       // Log the request for data retrieval
       logger.info("Retrieving anthropometry data for user ID", { userId: id });
 
       // Get all anthropometry data by id
-      const data = anthropometryModel.advancedSearch({
+      let data = anthropometryModel.advancedSearch({
         field: "userId",
         operator: "==",
         value: id,
         withOutFields: ["userId"],
       });
+
+      if (periode_akhir && periode_awal) {
+        data = data.filter((item) => {
+          const tanggal = new Date(item.date);
+          return tanggal >= new Date(periode_awal as string) && tanggal <= new Date(periode_akhir as string);
+        });
+      }
 
       // Check if data is empty
       if (data.length === 0) {

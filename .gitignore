@@ -1,7 +1,7 @@
 .env
 /node_modules
-# /uploads/*
-# /db
+/uploads/*
+/db
 combined.log
 error.
 index.html

@@ -11,6 +11,7 @@ class ProfilController {
     try {
       const profilData = req.body;
       profilData.avatarUrl = "";
+      profilData.summary = "";
 
       const validationResult = validateData(ProfilSchema, profilData);
       if (validationResult !== true) {
@@ -77,6 +78,7 @@ class ProfilController {
           userId,
           avatarUrl: "",
           nama_lengkap: "",
+          summary: "",
         };
         profilModel.create(newProfil);
         logger.info("Profil created successfully for userId", { userId });
@@ -98,6 +100,8 @@ class ProfilController {
     const profilData = req.body;
 
     try {
+      // chekc if username already
+      
       profilModel.update(id, profilData);
       logger.info("Profil updated successfully", { id, profilData });
       res.status(200).json({ message: "Profil updated successfully." });

@@ -51,6 +51,13 @@ export default class UserController {
     try {
       const { body } = req;
 
+      const user = userModel.search("username", "==", body.username);
+      if (user.length > 0) {
+        logger.warn("Username is already taken", { username: body.username });
+        res.status(400).json({ error: "Username is already taken" });
+        return;
+      }
+
       if (body.password) body.password = await bcrypt.hash(body.password, 10);
 
       const oldUser = userModel.advancedSearch({
@@ -73,7 +80,7 @@ export default class UserController {
   deleteUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     try {
-      userModel.delete(id);
+      userModel.deleteWithRelation(id);
       logger.info("User deleted successfully", { id });
       res.status(200).json({ message: "User deleted" });
     } catch (error) {

@@ -6,6 +6,7 @@ export const ProfilSchema: Schema = {
   userId: "string",
   nama_lengkap: "string",
   avatarUrl: "string",
+  summary: "string",
 };
 
 export const profilModel = new JsonORM("profil", ProfilSchema);

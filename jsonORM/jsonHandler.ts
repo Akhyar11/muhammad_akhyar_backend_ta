@@ -12,6 +12,7 @@ class JsonORM {
   private logFile: string;
   private schema: Schema;
   private cachedData: any[] = [];
+  private relations: Record<string, { model: JsonORM; type: "one-to-one" | "one-to-many" | "many-to-many"; foreignKey: string; localKey: string }> = {};
 
   /**
    * Creates an instance of the JSON handler.
@@ -384,6 +385,95 @@ class JsonORM {
         throw error;
       }
     }
+  }
+
+  /**
+   * Define a relationship with another model.
+   *
+   * @param relationName - The name of the relation.
+   * @param options - The relation configuration.
+   */
+  setRelation(
+    relationName: string,
+    options: {
+      model: JsonORM;
+      type: "one-to-one" | "one-to-many" | "many-to-many";
+      foreignKey: string;
+      localKey: string;
+    }
+  ): void {
+    this.relations[relationName] = options;
+  }
+
+  /**
+   * Retrieve related data for a given item ID.
+   *
+   * @param id - The ID of the item to retrieve related data for.
+   * @param relationName - The name of the relation to fetch.
+   */
+  getRelated(id: string, relationName: string): any[] | any {
+    const relation = this.relations[relationName];
+    if (!relation) {
+      throw new Error(`Relation ${relationName} is not defined`);
+    }
+
+    const allData = this.readFile();
+    const item = allData.find((entry) => entry.id === id);
+    if (!item) {
+      throw new Error(`Item with ID ${id} not found`);
+    }
+
+    const { model, type, foreignKey, localKey } = relation;
+    const relatedData = model.read();
+
+    if (type === "one-to-one") {
+      return relatedData.find((relatedItem) => relatedItem[foreignKey] === item[localKey]);
+    } else if (type === "one-to-many") {
+      return relatedData.filter((relatedItem) => relatedItem[foreignKey] === item[localKey]);
+    } else if (type === "many-to-many") {
+      // Example for many-to-many with intermediate table logic
+      return relatedData.filter((relatedItem) => relatedItem[foreignKey].includes(item[localKey]));
+    }
+    return [];
+  }
+
+  /**
+   * Deletes an item and handles cascading deletion for related data.
+   *
+   * @param {string} id - The ID of the item to delete.
+   */
+  deleteWithRelation(id: string): void {
+    const allData = this.readFile();
+    const index = allData.findIndex((item) => item.id === id);
+    if (index === -1) {
+      throw new Error(`Data with ID: ${id} not found`);
+    }
+
+    const item = allData[index];
+
+    // Handle cascading delete for relations
+    for (const relationName in this.relations) {
+      const relation = this.relations[relationName];
+      const { model, type, foreignKey, localKey } = relation;
+
+      if (type === "one-to-one") {
+        const relatedItem = model.read().find((related) => related[foreignKey] === item[localKey]);
+        if (relatedItem) {
+          model.deleteWithRelation(relatedItem.id); // Recursive delete
+        }
+      } else if (type === "one-to-many") {
+        const relatedItems = model.read().filter((related) => related[foreignKey] === item[localKey]);
+        relatedItems.forEach((relatedItem) => model.deleteWithRelation(relatedItem.id));
+      } else if (type === "many-to-many") {
+        const relatedItems = model.read().filter((related) => related[foreignKey].includes(item[localKey]));
+        relatedItems.forEach((relatedItem) => model.deleteWithRelation(relatedItem.id));
+      }
+    }
+
+    // Delete the current item
+    allData.splice(index, 1);
+    this.writeFile(allData);
+    this.log(`Deleted data with ID: ${id}`);
   }
 }
 
