@@ -18,5 +18,23 @@
     "avatarUrl": "",
     "nama_lengkap": "",
     "summary": ""
+  },
+  {
+    "id": "70694fed-8562-4664-8329-5060d855df00",
+    "created_at": "Sat Feb 15 2025 11:46:24 GMT+0700 (Indochina Time)",
+    "updated_at": "Sat Feb 15 2025 11:46:24 GMT+0700 (Indochina Time)",
+    "userId": "95e2b02f-d6db-4ae9-9282-52bad34175b7",
+    "avatarUrl": "",
+    "nama_lengkap": "",
+    "summary": ""
+  },
+  {
+    "id": "fd2ec7ae-6d7d-466b-9958-9484d42594f5",
+    "created_at": "Sat Mar 01 2025 14:11:53 GMT+0700 (Indochina Time)",
+    "updated_at": "Sat Mar 01 2025 14:41:35 GMT+0700 (Indochina Time)",
+    "userId": "cfbc49f7-325d-4846-85da-1bb7ecf70540",
+    "nama_lengkap": "Muhammad Akhyar",
+    "avatarUrl": "",
+    "summary": "{\n  \"summary\": \"Hasil analisis menunjukkan bahwa pengguna memiliki berat badan yang normal berdasarkan indeks massa tubuh (BMI).\",\n  \"important_info\": [\n    \"Tinggi badan pengguna adalah 170 cm dan berat badannya berkisar antara 60-61 kg. Indikator BMI dihitung antara 20.76 sampai 21.11, yang keduanya jatuh di kategori normal.\",\n    \"Tidak ada perubahan yang signifikan dalam berat badan pengguna selama periode pendataan, dan status BMI tetap dalam kisaran normal.\"\n  ],\n  \"health_advice\": {\n    \"message\": \"Pertahankan pola makan dan aktivitas fisik yang seimbang untuk memelihara berat badan dan kesehatan tubuh yang baik.\",\n    \"recommendations\": [\n      \"Konsultasikan dengan tenaga kesehatan lokal untuk mendapatkan saran nutrisi dan program olahraga yang lebih tepat.\",\n      \"Lakukan pemeriksaan BMI secara berkala untuk memantau perkembangan kesehatan.\"\n    ],\n    \"urgency_level\": \"low\",\n    \"risk_factors\": [\n      \"Tidak ada faktor risiko yang signifikan yang teridentifikasi saat ini.\",\n      \"Namun, faktor seperti merokok,idak berolahraga, dan konsumsi makanan tidak sehat dapat meningkatkan risiko kesehatan.\"\n    ]\n  }\n}"
   }
 ]

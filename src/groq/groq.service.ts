@@ -11,17 +11,24 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 export const groqService = {
   async getGroqResponse(prompt: string) {
     const response = await groq.chat.completions.create({
-      model: "llama3-8b-8192",
-      messages: [{ role: "user", content: prompt }],
+      model: "qwen-2.5-32b",
+      messages: [
+        {
+          role: "system",
+          content:
+            "use indonesia, and use markdown format, dont give (AI:, Percakapan AI:)",
+        },
+        { role: "user", content: prompt },
+      ],
     });
-    return response;
+    return response.choices[0].message.content;
   },
 };
 
 export const groqCreateSummary = async (prompt: string) => {
   try {
     const response = await groq.chat.completions.create({
-      model: "deepseek-r1-distill-llama-70b",
+      model: "qwen-2.5-32b",
       messages: [
         { role: "system", content: jsonResponseFormat },
         { role: "user", content: prompt },

@@ -1,29 +1,24 @@
 [
   {
-    "id": "edd4cc03-eca7-4b57-b8e6-6d6f76fff704",
-    "username": "test1",
-    "password": "$2b$10$b/Tjb/L6Xt4YMuKc0b8.euJoI.6Oc0PUrL65W2rDRk5/XUOfIlOgy",
+    "id": "95e2b02f-d6db-4ae9-9282-52bad34175b7",
+    "created_at": "Sat Feb 15 2025 11:45:48 GMT+0700 (Indochina Time)",
+    "updated_at": "Sat Feb 15 2025 11:45:48 GMT+0700 (Indochina Time)",
+    "username": "indonesia",
+    "password": "$2b$10$UHtyia17JlOaljXODo0PYeeYyLffdk2ujOSuDFVvpmcFmfLAwqqq2",
     "jk": true,
-    "tgl_lahir": "test",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVkZDRjYzAzLWVjYTctNGI1Ny1iOGU2LTZkNmY3NmZmZjcwNCIsInVzZXJuYW1lIjoidGVzdDEiLCJpYXQiOjE3Mzc3Njc1MjR9.qXSWaI39Clwyh5B7MscQ0uONuNWxOH5d83FvhsHGOPM",
+    "tgl_lahir": "2025-02-15",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk1ZTJiMDJmLWQ2ZGItNGFlOS05MjgyLTUyYmFkMzQxNzViNyIsInVzZXJuYW1lIjoiaW5kb25lc2lhIiwiaWF0IjoxNzM5NTk0NzU4fQ.z_6CWGjwy4aleJgw_AEYWYhHwKtcro0uRhVOsKWQe_M",
     "iotIsAllowed": false
   },
   {
-    "id": "0bd2de7e-feb5-4cec-b8eb-cb6239d7ed09",
-    "username": "admin",
-    "password": "$2b$10$apG/Uej322h43jSDGw1fXOqmbqujpaWuPi0/C45UGLHKWNg8V8q4.",
+    "id": "cfbc49f7-325d-4846-85da-1bb7ecf70540",
+    "created_at": "Wed Feb 19 2025 11:52:27 GMT+0700 (Indochina Time)",
+    "updated_at": "Sat Mar 01 2025 14:05:24 GMT+0700 (Indochina Time)",
+    "username": "test123",
+    "password": "$2b$10$1xReAdzUpfDDoZIVN47hZ.N7DvnoBzN2ha27sFj0NKxINSMvNe3Ba",
     "jk": true,
-    "tgl_lahir": "2000-11-11",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBiZDJkZTdlLWZlYjUtNGNlYy1iOGViLWNiNjIzOWQ3ZWQwOSIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3MzgzNzQyNzF9.Eh53mS3cQ17YcNU2KFJ_O6RdBCkizoeqs8xc_yzoTr0",
-    "iotIsAllowed": false
-  },
-  {
-    "id": "73b8e3a5-5dc0-4966-bcaf-18e1bfaab5b2",
-    "username": "akhyar",
-    "password": "$2b$10$wTaR7HR.EREdMHyksC7gVOE2L39mxD/ip7DSs4pBCG3pgCZHcrr7y",
-    "jk": true,
-    "tgl_lahir": "2016-01-31",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczYjhlM2E1LTVkYzAtNDk2Ni1iY2FmLTE4ZTFiZmFhYjViMiIsInVzZXJuYW1lIjoiYWtoeWFyIiwiaWF0IjoxNzM4MjkyMTUzfQ.UqbPibCSuEoSJFwKjpPxVZFaDL-guBkgpiTmQzgoGHg",
+    "tgl_lahir": "2025-02-19",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNmYmM0OWY3LTMyNWQtNDg0Ni04NWRhLTFiYjdlY2Y3MDU0MCIsInVzZXJuYW1lIjoidGVzdDEyMyIsImlhdCI6MTc0MDgxMjcyNH0.DTPz5F1F-CC8U51QqTHQ4pMryn-t0ntzGDFFiMWI7GM",
     "iotIsAllowed": false
   }
 ]

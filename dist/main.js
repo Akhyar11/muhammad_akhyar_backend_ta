@@ -15,6 +15,7 @@ const user_route_1 = __importDefault(require("./src/user/user.route"));
 const profil_route_1 = __importDefault(require("./src/profil/profil.route"));
 const antropomerty_iot_route_1 = __importDefault(require("./src/anthropometry/iot/antropomerty.iot.route"));
 const antropomerty_route_1 = __importDefault(require("./src/anthropometry/antropomerty.route"));
+const groq_route_1 = __importDefault(require("./src/groq/groq.route"));
 // Import middleware services
 const auth_middleware_service_1 = __importDefault(require("./src/middleware/auth.middleware.service"));
 const iot_middleware_service_1 = __importDefault(require("./src/middleware/iot.middleware.service"));
@@ -41,6 +42,7 @@ class Server {
         this.app.use("/api", profil_route_1.default);
         this.app.use("/api", antropomerty_iot_route_1.default);
         this.app.use("/api", antropomerty_route_1.default);
+        this.app.use("/api", groq_route_1.default);
     }
     start() {
         this.app.listen(this.port, () => {

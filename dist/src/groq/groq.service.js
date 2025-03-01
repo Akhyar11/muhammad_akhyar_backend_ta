@@ -17,24 +17,39 @@ const groq_sdk_1 = __importDefault(require("groq-sdk"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const antropomerty_model_1 = require("../anthropometry/antropomerty.model");
 const user_model_1 = require("../user/user.model");
+const groq_promnt_1 = require("./groq.promnt");
 dotenv_1.default.config();
 const groq = new groq_sdk_1.default({ apiKey: process.env.GROQ_API_KEY });
 exports.groqService = {
     getGroqResponse(prompt) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield groq.chat.completions.create({
-                model: "llama3-8b-8192",
-                messages: [{ role: "user", content: prompt }],
+                model: "qwen-2.5-32b",
+                messages: [
+                    {
+                        role: "system",
+                        content: "use indonesia, and use markdown format, dont give (AI:, Percakapan AI:)",
+                    },
+                    { role: "user", content: prompt },
+                ],
             });
-            return response;
+            return response.choices[0].message.content;
         });
     },
 };
 const groqCreateSummary = (prompt) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield groq.chat.completions.create({
-            model: "deepseek-r1-distill-llama-70b",
-            messages: [{ role: "user", content: prompt }],
+            model: "qwen-2.5-32b",
+            messages: [
+                { role: "system", content: groq_promnt_1.jsonResponseFormat },
+                { role: "user", content: prompt },
+            ],
+            temperature: 1,
+            max_completion_tokens: 4700,
+            top_p: 1,
+            stream: false,
+            response_format: { type: "json_object" },
         });
         const summary = response.choices[0].message.content;
         return summary;
@@ -70,7 +85,7 @@ const groqCreateSummaryAnthropometry = (userId) => __awaiter(void 0, void 0, voi
         if (bmi >= 30)
             return "obesity";
     };
-    let prompt = "Kamu adalah asisten kesehatan berbasis AI yang ahli dalam menganalisis indeks massa tubuh (BMI) dan memberikan saran kesehatan yang sesuai. Berikut adalah data pengguna: ";
+    let prompt = "Kamu adalah asisten kesehatan berbasis AI yang ahli dalam menganalisis indeks massa tubuh (BMI) dan memberikan saran kesehatan yang sesuai. Berikut adalah data pengguna: \n\n";
     prompt += `Tanggal Lahir: ${userData[0].tgl_lahir}\n`;
     prompt += `Jenis Kelamin: ${userData[0].jk ? "Laki-Laki" : "Perempuan"}\n`;
     prompt += `Hari Sekarang: ${new Date().toString()}\n\n`;
@@ -81,12 +96,7 @@ const groqCreateSummaryAnthropometry = (userId) => __awaiter(void 0, void 0, voi
         prompt += `BMI: ${d.bmi}\n\n`;
         prompt += `Status: ${status[statusBmi(Number(d.bmi)) || "normal"]}\n\n`;
     }
-    prompt += `
-  Perhatikan tata cara penulisan respon berikut ini:
-  - Gunakan Bahasa Indonesia dalam memberikan resposne
-  - Berikan response yang singkat saja
-  - Berikan response sebagai markdown yang rapi
-  `;
+    prompt += `Gunakan Bahasa Indonesia dalam memberikan resposne`;
     let summary = yield (0, exports.groqCreateSummary)(prompt);
     summary = removeThinkTag(summary);
     return summary;

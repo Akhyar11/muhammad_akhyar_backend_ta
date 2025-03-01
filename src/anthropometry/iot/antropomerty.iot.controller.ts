@@ -53,9 +53,18 @@ export default class AnthropometryIotController {
         notes,
       });
 
-      const summary = await groqCreateSummaryAnthropometry(userId as string)
-      const profil = profilModel.search("userId", "==", userId)
-      profilModel.update(profil[0].id, { summary })
+      const summary = await groqCreateSummaryAnthropometry(userId as string);
+      const profil = profilModel.search("userId", "==", userId);
+      if (profil.length === 0) {
+        profilModel.create({
+          userId,
+          nama_lengkap: "",
+          avatarUrl: "",
+          summary,
+        });
+      } else {
+        profilModel.update(profil[0].id, { summary });
+      }
 
       // Return response
       res.status(200).json({ message: "Data saved successfully" });

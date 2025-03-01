@@ -22,7 +22,7 @@ class JsonORM {
     constructor(modelName, schema) {
         this.cachedData = [];
         this.relations = {};
-        this.schema = Object.assign({ id: "string" }, schema);
+        this.schema = Object.assign({ id: "string", created_at: "string", updated_at: "string" }, schema);
         this.dataFile = "db/" + modelName + "/data.json";
         this.logFile = "db/log.json";
         if (!fs_1.default.existsSync(this.dataFile)) {
@@ -83,7 +83,7 @@ class JsonORM {
      * @throws Will throw an error if the data does not conform to the schema.
      */
     create(data) {
-        data = Object.assign({ id: crypto_1.default.randomUUID() }, data);
+        data = Object.assign({ id: crypto_1.default.randomUUID(), created_at: new Date().toString(), updated_at: new Date().toString() }, data);
         this.validateSchema(this.schema, data);
         // Save field only exist on schema
         const filteredData = Object.keys(data)
@@ -199,6 +199,7 @@ class JsonORM {
                 const tempData = Object.assign(Object.assign({}, validData), { [key]: data[key] });
                 this.validateSchema(this.schema, tempData);
                 validData[key] = data[key];
+                validData.updated_at = new Date().toString();
             }
             else {
                 throw new Error(`Field ${key} is not defined in schema`);
@@ -384,17 +385,23 @@ class JsonORM {
             const relation = this.relations[relationName];
             const { model, type, foreignKey, localKey } = relation;
             if (type === "one-to-one") {
-                const relatedItem = model.read().find((related) => related[foreignKey] === item[localKey]);
+                const relatedItem = model
+                    .read()
+                    .find((related) => related[foreignKey] === item[localKey]);
                 if (relatedItem) {
                     model.deleteWithRelation(relatedItem.id); // Recursive delete
                 }
             }
             else if (type === "one-to-many") {
-                const relatedItems = model.read().filter((related) => related[foreignKey] === item[localKey]);
+                const relatedItems = model
+                    .read()
+                    .filter((related) => related[foreignKey] === item[localKey]);
                 relatedItems.forEach((relatedItem) => model.deleteWithRelation(relatedItem.id));
             }
             else if (type === "many-to-many") {
-                const relatedItems = model.read().filter((related) => related[foreignKey].includes(item[localKey]));
+                const relatedItems = model
+                    .read()
+                    .filter((related) => related[foreignKey].includes(item[localKey]));
                 relatedItems.forEach((relatedItem) => model.deleteWithRelation(relatedItem.id));
             }
         }

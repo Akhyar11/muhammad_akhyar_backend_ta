@@ -25,5 +25,27 @@
     "bmi": "20.761245674740486",
     "date": "Sat Feb 01 2025 09:09:34 GMT+0700 (Indochina Time)",
     "notes": "create_from_iot"
+  },
+  {
+    "id": "a2e8e371-aeb2-449d-97e1-aa4023da2e56",
+    "created_at": "Sat Mar 01 2025 14:06:10 GMT+0700 (Indochina Time)",
+    "updated_at": "Sat Mar 01 2025 14:06:10 GMT+0700 (Indochina Time)",
+    "userId": "cfbc49f7-325d-4846-85da-1bb7ecf70540",
+    "height": "170",
+    "weight": "60",
+    "bmi": "20.761245674740486",
+    "date": "Sat Mar 01 2025 14:06:10 GMT+0700 (Indochina Time)",
+    "notes": "create_from_iot"
+  },
+  {
+    "id": "4f64a41a-fe00-4585-a9c6-4e46094949a1",
+    "created_at": "Sat Mar 01 2025 14:11:50 GMT+0700 (Indochina Time)",
+    "updated_at": "Sat Mar 01 2025 14:11:50 GMT+0700 (Indochina Time)",
+    "userId": "cfbc49f7-325d-4846-85da-1bb7ecf70540",
+    "height": "170",
+    "weight": "61",
+    "bmi": "21.107266435986162",
+    "date": "Sat Mar 01 2025 14:11:50 GMT+0700 (Indochina Time)",
+    "notes": "create_from_iot"
   }
 ]

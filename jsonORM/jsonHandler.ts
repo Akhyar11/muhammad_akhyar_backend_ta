@@ -12,7 +12,15 @@ class JsonORM {
   private logFile: string;
   private schema: Schema;
   private cachedData: any[] = [];
-  private relations: Record<string, { model: JsonORM; type: "one-to-one" | "one-to-many" | "many-to-many"; foreignKey: string; localKey: string }> = {};
+  private relations: Record<
+    string,
+    {
+      model: JsonORM;
+      type: "one-to-one" | "one-to-many" | "many-to-many";
+      foreignKey: string;
+      localKey: string;
+    }
+  > = {};
 
   /**
    * Creates an instance of the JSON handler.
@@ -28,7 +36,12 @@ class JsonORM {
    * If the log file does not exist, it initializes the log file with an empty array.
    */
   constructor(modelName: string, schema: Schema) {
-    this.schema = { id: "string", ...schema };
+    this.schema = {
+      id: "string",
+      created_at: "string",
+      updated_at: "string",
+      ...schema,
+    };
     this.dataFile = "db/" + modelName + "/data.json";
     this.logFile = "db/log.json";
     if (!fs.existsSync(this.dataFile)) {
@@ -101,7 +114,12 @@ class JsonORM {
    * @throws Will throw an error if the data does not conform to the schema.
    */
   create(data: any) {
-    data = { id: crypto.randomUUID(), ...data };
+    data = {
+      id: crypto.randomUUID(),
+      created_at: new Date().toString(),
+      updated_at: new Date().toString(),
+      ...data,
+    };
     this.validateSchema(this.schema, data);
 
     // Save field only exist on schema
@@ -234,6 +252,7 @@ class JsonORM {
         const tempData = { ...validData, [key]: data[key] };
         this.validateSchema(this.schema, tempData);
         validData[key] = data[key];
+        validData.updated_at = new Date().toString();
       } else {
         throw new Error(`Field ${key} is not defined in schema`);
       }
@@ -427,12 +446,18 @@ class JsonORM {
     const relatedData = model.read();
 
     if (type === "one-to-one") {
-      return relatedData.find((relatedItem) => relatedItem[foreignKey] === item[localKey]);
+      return relatedData.find(
+        (relatedItem) => relatedItem[foreignKey] === item[localKey]
+      );
     } else if (type === "one-to-many") {
-      return relatedData.filter((relatedItem) => relatedItem[foreignKey] === item[localKey]);
+      return relatedData.filter(
+        (relatedItem) => relatedItem[foreignKey] === item[localKey]
+      );
     } else if (type === "many-to-many") {
       // Example for many-to-many with intermediate table logic
-      return relatedData.filter((relatedItem) => relatedItem[foreignKey].includes(item[localKey]));
+      return relatedData.filter((relatedItem) =>
+        relatedItem[foreignKey].includes(item[localKey])
+      );
     }
     return [];
   }
@@ -457,16 +482,26 @@ class JsonORM {
       const { model, type, foreignKey, localKey } = relation;
 
       if (type === "one-to-one") {
-        const relatedItem = model.read().find((related) => related[foreignKey] === item[localKey]);
+        const relatedItem = model
+          .read()
+          .find((related) => related[foreignKey] === item[localKey]);
         if (relatedItem) {
           model.deleteWithRelation(relatedItem.id); // Recursive delete
         }
       } else if (type === "one-to-many") {
-        const relatedItems = model.read().filter((related) => related[foreignKey] === item[localKey]);
-        relatedItems.forEach((relatedItem) => model.deleteWithRelation(relatedItem.id));
+        const relatedItems = model
+          .read()
+          .filter((related) => related[foreignKey] === item[localKey]);
+        relatedItems.forEach((relatedItem) =>
+          model.deleteWithRelation(relatedItem.id)
+        );
       } else if (type === "many-to-many") {
-        const relatedItems = model.read().filter((related) => related[foreignKey].includes(item[localKey]));
-        relatedItems.forEach((relatedItem) => model.deleteWithRelation(relatedItem.id));
+        const relatedItems = model
+          .read()
+          .filter((related) => related[foreignKey].includes(item[localKey]));
+        relatedItems.forEach((relatedItem) =>
+          model.deleteWithRelation(relatedItem.id)
+        );
       }
     }
 

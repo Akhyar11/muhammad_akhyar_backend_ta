@@ -7,10 +7,10 @@ exports.convertationModel = exports.groqModel = exports.ConvertationSchema = exp
 const jsonHandler_1 = __importDefault(require("../../jsonORM/jsonHandler"));
 exports.GroqSchema = {
     userId: "string",
-    title: "string"
+    title: "string",
 };
 exports.ConvertationSchema = {
-    groqId: "string", // foreign key untuk menghubungkan ke GroqSchema
+    userId: "string",
     userMessage: "string",
     AIMessage: "string",
 };

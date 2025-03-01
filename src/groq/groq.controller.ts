@@ -1,99 +1,90 @@
 import { Request, Response } from "express";
-import { groqModel, GroqSchema } from "./groq.model";
-import { validateData } from "../utils/validation.util";
+import { convertationModel } from "./groq.model";
+import { groqService } from "./groq.service";
 import logger from "../utils/logger.util";
 
-class GroqController {
-  createGroq(req: Request, res: Response) {
+export default class GroqController {
+  /**
+   * Handles the creation of a new conversation entry and generates a response from Groq.
+   *
+   * @param req - Express request object containing user input.
+   * @param res - Express response object to send the response back to the client.
+   */
+  async createConvertation(req: Request, res: Response) {
     try {
-      const groqData = req.body;
-      
-      const validationResult = validateData(GroqSchema, groqData);
-      if (validationResult !== true) {
-        logger.warn("Validation failed for createGroq", { validationResult });
-        res.status(400).json(validationResult);
-        return;
+      const { userId, userMessage } = req.body;
+      // Validate input
+      if (!userId || !userMessage) {
+        res.status(400).json({ error: "userId and userMessage are required" });
       }
+      // Fetch the last 3 conversations for the given userId
+      const previousConversations = convertationModel
+        .search("userId", "==", userId)
+        .slice(-3);
+      // Construct the prompt with previous conversations
+      let prompt = "Gunakan bahasa indonesia\n";
+      previousConversations.forEach((conv, index) => {
+        prompt += `Percakapan ${index + 1}:\n`;
+        prompt += `User: ${conv.userMessage}\n`;
+        prompt += `AI: ${conv.AIMessage}\n\n`;
+      });
+      prompt += `Percakapan saat ini:\n`;
+      prompt += `User: ${userMessage}\n`;
 
-      groqModel.create(groqData);
-      logger.info("Groq created successfully", { groqData });
-      res.status(201).json({ message: "Groq created successfully." });
+      // Get response from Groq
+      const groqResponse = await groqService.getGroqResponse(prompt);
+      const AIMessage = groqResponse;
+      // Create a new convertation entry
+      const newConvertation = {
+        userId: userId,
+        userMessage: userMessage,
+        AIMessage: AIMessage,
+      };
+      convertationModel.create(newConvertation);
+      // Send response back to the client
+      res.status(200).json({
+        userMessage: userMessage,
+        AIMessage: AIMessage,
+      });
     } catch (error) {
-      logger.error("Error in createGroq", { error });
-      res.status(500).json({ message: "Internal server error" });
+      logger.error("Error in createConvertation:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 
-  getAllGroqs(req: Request, res: Response) {
+  /**
+   * Retrieves conversation entries for a given userId, ordered from newest to oldest.
+   *
+   * @param req - Express request object containing query parameters.
+   * @param res - Express response object to send the response back to the client.
+   */
+  async getConvertation(req: Request, res: Response) {
     try {
-      const groqs = groqModel.read();
-      logger.info("Retrieved all groqs", { count: groqs.length });
-      res.status(200).json(groqs);
-    } catch (error) {
-      logger.error("Failed to retrieve groqs", { error });
-      res.status(500).json({ message: "Failed to retrieve groqs." });
-    }
-  }
+      const { userId, limit } = req.query;
 
-  getGroqById(req: Request, res: Response) {
-    const { id } = req.params;
-    try {
-      const groqs = groqModel.read();
-      const groq = groqs.find((g) => g.id === id);
-      if (!groq) {
-        logger.warn("Groq not found", { id });
-        res.status(404).json({ message: "Groq not found." });
-        return;
-      }
-      logger.info("Retrieved groq by ID", { id });
-      res.status(200).json(groq);
-    } catch (error) {
-      logger.error("Failed to retrieve groq by ID", { id, error });
-      res.status(500).json({ message: "Failed to retrieve groq." });
-    }
-  }
-
-  updateGroq(req: Request, res: Response) {
-    const { id } = req.params;
-    const groqData = req.body;
-
-    try {
-      const groqs = groqModel.read();
-      const groq = groqs.find((g) => g.id === id);
-      if (!groq) {
-        logger.warn("Groq not found for update", { id });
-        res.status(404).json({ message: "Groq not found." });
-        return;
+      // Validate input
+      if (!userId) {
+        res.status(400).json({ error: "userId is required" });
       }
 
-      groqModel.update(id, groqData);
-      logger.info("Groq updated successfully", { id, groqData });
-      res.status(200).json({ message: "Groq updated successfully." });
-    } catch (error) {
-      logger.error("Error in updateGroq", { id, error });
-      res.status(500).json({ message: "Internal server error" });
-    }
-  }
+      // Parse limit to number, default to 10 if not provided or invalid
+      const parsedLimit = typeof limit === "string" ? parseInt(limit, 10) : 10;
+      const validLimit = isNaN(parsedLimit) ? 10 : parsedLimit;
 
-  deleteGroq(req: Request, res: Response) {
-    const { id } = req.params;
-    try {
-      const groqs = groqModel.read();
-      const groq = groqs.find((g) => g.id === id);
-      if (!groq) {
-        logger.warn("Groq not found for deletion", { id });
-        res.status(404).json({ message: "Groq not found." });
-        return;
-      }
+      // Fetch conversations for the given userId, ordered from newest to oldest
+      const conversations = convertationModel
+        .search("userId", "==", userId)
+        .sort(
+          (a, b) =>
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        )
+        .slice(0, validLimit);
 
-      groqModel.delete(id);
-      logger.info("Groq deleted successfully", { id });
-      res.status(200).json({ message: "Groq deleted successfully." });
+      // Send response back to the client
+      res.status(200).json(conversations);
     } catch (error) {
-      logger.error("Error in deleteGroq", { id, error });
-      res.status(500).json({ message: "Internal server error" });
+      logger.error("Error in getConvertation:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 }
-
-export default GroqController;

@@ -16,6 +16,11 @@ class AnthropometryRoute {
       "/antropomerty/list/:id",
       this.anthropometryController.getAllById
     );
+
+    this.route.get(
+      "/antropomerty/download/:id",
+      this.anthropometryController.exportToExcel
+    );
   }
 }
 

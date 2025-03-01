@@ -61,7 +61,17 @@ class AnthropometryIotController {
                 });
                 const summary = yield (0, groq_service_1.groqCreateSummaryAnthropometry)(userId);
                 const profil = profil_model_1.profilModel.search("userId", "==", userId);
-                profil_model_1.profilModel.update(profil[0].id, { summary });
+                if (profil.length === 0) {
+                    profil_model_1.profilModel.create({
+                        userId,
+                        nama_lengkap: "",
+                        avatarUrl: "",
+                        summary,
+                    });
+                }
+                else {
+                    profil_model_1.profilModel.update(profil[0].id, { summary });
+                }
                 // Return response
                 res.status(200).json({ message: "Data saved successfully" });
             }

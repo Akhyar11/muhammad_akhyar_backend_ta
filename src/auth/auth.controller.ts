@@ -47,6 +47,7 @@ export default class AuthController {
       });
       res.status(200).json({ token, id: user[0].id, username: body.username });
     } catch (error) {
+      console.log(error);
       logger.error("Failed to login", { error });
       res.status(500).json({ message: "Failed to login, server error" });
     }
