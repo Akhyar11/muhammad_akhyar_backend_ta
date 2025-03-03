@@ -42,8 +42,8 @@ class JsonORM {
       updated_at: "string",
       ...schema,
     };
-    this.dataFile = "db/" + modelName + "/data.json";
-    this.logFile = "db/log.json";
+    this.dataFile = "tmp/db/" + modelName + "/data.json";
+    this.logFile = "tmp/db/log.json";
     if (!fs.existsSync(this.dataFile)) {
       fs.mkdirSync("db/" + modelName, { recursive: true });
       fs.writeFileSync(this.dataFile, JSON.stringify([]));

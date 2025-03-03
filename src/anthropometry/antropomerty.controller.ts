@@ -92,7 +92,7 @@ export default class AnthropometryController {
       // Simpan file ke dalam folder temp
       const filePath = path.join(
         __dirname,
-        "../../../temp",
+        "../../../tmp/temp",
         `Anthropometry_${id}.xlsx`
       );
       XLSX.writeFile(workbook, filePath);

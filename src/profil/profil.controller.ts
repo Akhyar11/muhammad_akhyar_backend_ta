@@ -101,7 +101,7 @@ class ProfilController {
 
     try {
       // chekc if username already
-      
+
       profilModel.update(id, profilData);
       logger.info("Profil updated successfully", { id, profilData });
       res.status(200).json({ message: "Profil updated successfully." });
@@ -151,7 +151,7 @@ class ProfilController {
       }
 
       const avatar = req.files.avatar;
-      const uploadPath = __dirname + "/../../uploads/" + avatar.name;
+      const uploadPath = __dirname + "/../../tmp/uploads/" + avatar.name;
 
       avatar.mv(uploadPath, (err: any) => {
         if (err) {
@@ -172,7 +172,8 @@ class ProfilController {
         });
       });
     } catch (error) {
-      const uploadPath = __dirname + "/../../uploads/" + req.files.avatar.name;
+      const uploadPath =
+        __dirname + "/../../tmp/uploads/" + req.files.avatar.name;
       if (fs.existsSync(uploadPath)) {
         fs.unlinkSync(uploadPath);
       }
@@ -197,7 +198,7 @@ class ProfilController {
         logger.warn("Profile picture not found", { id });
         const defaultAvatarPath = path.join(
           __dirname,
-          "../../uploads/default-avatar.jpg"
+          "../../tmp/uploads/default-avatar.jpg"
         );
         if (fs.existsSync(defaultAvatarPath)) {
           res.status(200).sendFile(defaultAvatarPath);
