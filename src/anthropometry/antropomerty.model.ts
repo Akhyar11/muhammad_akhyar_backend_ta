@@ -7,6 +7,9 @@ export const AnthropometrySchema: Schema = {
   height: "string",
   weight: "string",
   bmi: "string",
+  ksm: "string",
+  age: "number",
+  months: "number",
   date: "string",
   notes: "string",
 };
