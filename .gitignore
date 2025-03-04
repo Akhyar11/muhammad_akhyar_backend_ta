@@ -2,7 +2,6 @@
 /node_modules
 /uploads/*
 /db/*
-/dist/*
 combined.log
 error.
 index.html
