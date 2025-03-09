@@ -1,14 +1,15 @@
 {
   "version": 2,
-  "functions": {
-    "api/main.ts": {
-      "runtime": "@vercel/node"
+  "builds": [
+    {
+      "src": "main.ts",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/api/main.ts"
+      "dest": "main.ts"
     }
   ]
 }
