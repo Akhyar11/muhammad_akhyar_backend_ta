@@ -40,7 +40,6 @@ export class Server {
 
   private configureRoutes(): void {
     this.app.use("/api", authRoute);
-
     this.app.use("/api", userRoute);
     this.app.use("/api", profilRoute);
     this.app.use("/api", anthropometryIotRoute);
@@ -48,12 +47,11 @@ export class Server {
     this.app.use("/api", covertationRoute);
   }
 
-  public start(): void {
-    this.app.listen(this.port, () => {
-      console.log(`Server is running on port ${this.port}`);
-    });
+  public getApp(): Application {
+    return this.app;
   }
 }
 
+// ✅ Ekspor Express app, bukan menjalankan server langsung
 const server = new Server();
-server.start();
+export default server.getApp();
