@@ -1,4 +1,4 @@
-import { Schema } from "../../jsonORM/assets/types";
+import { Schema } from "../../firebaseORM/assets/type";
 
 export const validateData = (schema: Schema, data: any) => {
   const validate = (obj: any, schema: any) => {

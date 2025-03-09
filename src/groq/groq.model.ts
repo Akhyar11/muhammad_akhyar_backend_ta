@@ -1,5 +1,6 @@
-import { Schema } from "../../jsonORM/assets/types";
-import JsonORM from "../../jsonORM/jsonHandler";
+import { Schema } from "../../firebaseORM/assets/type";
+import FirebaseService from "../../firebaseORM/FirebaseService";
+import { firebaseConfig } from "../utils/firebase.config";
 
 export const GroqSchema: Schema = {
   userId: "string",
@@ -12,8 +13,12 @@ export const ConvertationSchema: Schema = {
   AIMessage: "string",
 };
 
-const groqModel = new JsonORM("groq", GroqSchema);
-const convertationModel = new JsonORM("convertation", ConvertationSchema);
+const groqModel = new FirebaseService("groq", GroqSchema, firebaseConfig);
+const convertationModel = new FirebaseService(
+  "convertation",
+  ConvertationSchema,
+  firebaseConfig
+);
 
 groqModel.setRelation("convertation", {
   model: convertationModel,

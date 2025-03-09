@@ -41,7 +41,7 @@ export default class MiddlewareService {
         return;
       }
 
-      jwt.verify(bearerToken, secret, (err, authData) => {
+      jwt.verify(bearerToken, secret, async (err, authData) => {
         // If token is invalid
         if (err) {
           res.status(403).json({ message: "not login, please login" });
@@ -59,7 +59,7 @@ export default class MiddlewareService {
           return;
         }
 
-        const user = userModel.search(
+        const user = await userModel.search(
           "id",
           "==",
           (authData as jwt.JwtPayload).id

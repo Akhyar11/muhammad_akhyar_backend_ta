@@ -1,5 +1,6 @@
-import { Schema } from "../../jsonORM/assets/types";
-import JsonORM from "../../jsonORM/jsonHandler";
+import { Schema } from "../../firebaseORM/assets/type";
+import FirebaseService from "../../firebaseORM/FirebaseService";
+import { firebaseConfig } from "../utils/firebase.config";
 
 // Profil schema definition
 export const ProfilSchema: Schema = {
@@ -9,4 +10,8 @@ export const ProfilSchema: Schema = {
   summary: "string",
 };
 
-export const profilModel = new JsonORM("profil", ProfilSchema);
+export const profilModel = new FirebaseService(
+  "profil",
+  ProfilSchema,
+  firebaseConfig
+);

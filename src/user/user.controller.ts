@@ -6,7 +6,7 @@ import logger from "../utils/logger.util"; // Import the logger
 export default class UserController {
   getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
-      const users = userModel.readWithOptionsAndFields({
+      const users = await userModel.readWithOptionsAndFields({
         fields: ["password", "token"],
       });
       logger.info("Retrieved all users", { count: users.length });
@@ -27,7 +27,7 @@ export default class UserController {
         return;
       }
 
-      const user = userModel.search("username", "==", body.username);
+      const user = await userModel.search("username", "==", body.username);
       if (user.length > 0) {
         logger.warn("Username is already taken", { username: body.username });
         res.status(400).json({ error: "Username is already taken" });
@@ -51,7 +51,7 @@ export default class UserController {
     try {
       const { body } = req;
 
-      const user = userModel.search("username", "==", body.username);
+      const user = await userModel.search("username", "==", body.username);
       if (user.length > 0) {
         logger.warn("Username is already taken", { username: body.username });
         res.status(400).json({ error: "Username is already taken" });
@@ -60,7 +60,7 @@ export default class UserController {
 
       if (body.password) body.password = await bcrypt.hash(body.password, 10);
 
-      const oldUser = userModel.advancedSearch({
+      const oldUser = await userModel.advancedSearch({
         field: "id",
         operator: "==",
         value: id,
@@ -92,7 +92,7 @@ export default class UserController {
   getUserById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     try {
-      const user = userModel.search("id", "==", id);
+      const user = await userModel.search("id", "==", id);
       if (user.length === 0) {
         logger.warn("User not found", { id });
         res.status(404).json({ error: "User not found" });

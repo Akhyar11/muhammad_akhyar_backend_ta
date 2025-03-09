@@ -18,9 +18,9 @@ export default class GroqController {
         res.status(400).json({ error: "userId and userMessage are required" });
       }
       // Fetch the last 3 conversations for the given userId
-      const previousConversations = convertationModel
-        .search("userId", "==", userId)
-        .slice(-3);
+      const previousConversations = (
+        await convertationModel.search("userId", "==", userId)
+      ).slice(-3);
       // Construct the prompt with previous conversations
       let prompt = "Gunakan bahasa indonesia\n";
       previousConversations.forEach((conv, index) => {
@@ -72,8 +72,9 @@ export default class GroqController {
       const validLimit = isNaN(parsedLimit) ? 10 : parsedLimit;
 
       // Fetch conversations for the given userId, ordered from newest to oldest
-      const conversations = convertationModel
-        .search("userId", "==", userId)
+      const conversations = (
+        await convertationModel.search("userId", "==", userId)
+      )
         .sort(
           (a, b) =>
             new Date(a.created_at).getTime() - new Date(b.created_at).getTime()

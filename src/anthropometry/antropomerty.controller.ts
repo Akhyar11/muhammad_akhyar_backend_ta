@@ -17,7 +17,7 @@ export default class AnthropometryController {
       logger.info("Retrieving anthropometry data for user ID", { userId: id });
 
       // Get all anthropometry data by id
-      let data = anthropometryModel.advancedSearch({
+      let data = await await anthropometryModel.advancedSearch({
         field: "userId",
         operator: "==",
         value: id,
@@ -61,7 +61,7 @@ export default class AnthropometryController {
       logger.info("Exporting anthropometry data to Excel", { userId: id });
 
       // Ambil data sesuai ID
-      let data = anthropometryModel.advancedSearch({
+      let data = await anthropometryModel.advancedSearch({
         field: "userId",
         operator: "==",
         value: id,

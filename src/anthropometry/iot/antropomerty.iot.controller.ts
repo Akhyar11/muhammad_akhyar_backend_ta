@@ -20,7 +20,6 @@ export default class AnthropometryIotController {
   async setData(req: Request, res: Response) {
     try {
       const { height, weight, notes, userId } = req.query;
-      console.log({ height, weight, notes, userId });
       const date = new Date().toString();
 
       // Validate data
@@ -36,7 +35,7 @@ export default class AnthropometryIotController {
       }
 
       // Check if user exists
-      const user = userModel.search("id", "==", userId);
+      const user = await userModel.search("id", "==", userId);
       if (!user || user.length === 0) {
         logger.warn("User not found in getData", { userId });
         res.status(404).json({ message: "User not found" });
@@ -99,16 +98,16 @@ export default class AnthropometryIotController {
       } else {
         summary = await groqCreateSummaryKMS(userId as string);
       }
-      const profil = profilModel.search("userId", "==", userId);
+      const profil = await profilModel.search("userId", "==", userId);
       if (!profil[0]) {
-        profilModel.create({
+        await profilModel.create({
           userId,
           nama_lengkap: "",
           avatarUrl: "",
           summary,
         });
       } else {
-        profilModel.update(profil[0].id, { summary });
+        await profilModel.update(profil[0].id, { summary });
       }
 
       // Return response
@@ -126,7 +125,7 @@ export default class AnthropometryIotController {
       const { userId } = req.query;
 
       // Check if user exists
-      const user = userModel.search("userId", "==", userId);
+      const user = await userModel.search("userId", "==", userId);
       if (!user || user.length === 0) {
         logger.warn("User not found in getAccess", { userId });
         res.status(404).json({ message: "User not found" });
@@ -134,7 +133,10 @@ export default class AnthropometryIotController {
       }
 
       // Grant access
-      userModel.update(userId as string, { ...user[0], iotIsAllowed: true });
+      await userModel.update(userId as string, {
+        ...user[0],
+        iotIsAllowed: true,
+      });
       logger.info("Access granted to user", { userId });
 
       // Return response

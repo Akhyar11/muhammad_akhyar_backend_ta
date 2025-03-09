@@ -7,7 +7,7 @@ import fs from "fs";
 import logger from "../utils/logger.util";
 
 class ProfilController {
-  createProfil(req: Request, res: Response) {
+  async createProfil(req: Request, res: Response) {
     try {
       const profilData = req.body;
       profilData.avatarUrl = "";
@@ -20,7 +20,7 @@ class ProfilController {
         return;
       }
 
-      const user = userModel.search("id", "==", profilData.userId);
+      const user = await userModel.search("id", "==", profilData.userId);
       if (user.length === 0) {
         logger.warn("User not found for createProfil", {
           userId: profilData.userId,
@@ -29,7 +29,7 @@ class ProfilController {
         return;
       }
 
-      profilModel.create(profilData);
+      await profilModel.create(profilData);
       logger.info("Profil created successfully", { profilData });
       res.status(201).json({ message: "Profil created successfully." });
     } catch (error) {
@@ -38,9 +38,9 @@ class ProfilController {
     }
   }
 
-  getAllProfils(req: Request, res: Response) {
+  async getAllProfils(req: Request, res: Response) {
     try {
-      const profils = profilModel.read();
+      const profils = await profilModel.read();
       logger.info("Retrieved all profils", { count: profils.length });
       res.status(200).json(profils);
     } catch (error) {
@@ -49,10 +49,10 @@ class ProfilController {
     }
   }
 
-  getProfilById(req: Request, res: Response) {
+  async getProfilById(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const profils = profilModel.read();
+      const profils = await profilModel.read();
       const profil = profils.find((p) => p.id === id);
       if (!profil) {
         logger.warn("Profil not found", { id });
@@ -67,10 +67,10 @@ class ProfilController {
     }
   }
 
-  getProfilByUserId(req: Request, res: Response) {
+  async getProfilByUserId(req: Request, res: Response) {
     const { userId } = req.params;
     try {
-      const profils = profilModel.read();
+      const profils = await profilModel.read();
       const profil = profils.find((p) => p.userId === userId);
       if (!profil) {
         logger.warn("Profil not found by userId", { userId });
@@ -80,9 +80,9 @@ class ProfilController {
           nama_lengkap: "",
           summary: "",
         };
-        profilModel.create(newProfil);
+        await profilModel.create(newProfil);
         logger.info("Profil created successfully for userId", { userId });
-        const profils = profilModel.read();
+        const profils = await profilModel.read();
         const profil = profils.find((p) => p.userId === userId);
         res.status(200).json(profil);
         return;
@@ -95,14 +95,14 @@ class ProfilController {
     }
   }
 
-  updateProfil(req: Request, res: Response) {
+  async updateProfil(req: Request, res: Response) {
     const { id } = req.params;
     const profilData = req.body;
 
     try {
       // chekc if username already
 
-      profilModel.update(id, profilData);
+      await profilModel.update(id, profilData);
       logger.info("Profil updated successfully", { id, profilData });
       res.status(200).json({ message: "Profil updated successfully." });
     } catch (error) {
@@ -111,10 +111,10 @@ class ProfilController {
     }
   }
 
-  deleteProfil(req: Request, res: Response) {
+  async deleteProfil(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      profilModel.delete(id);
+      await profilModel.delete(id);
       logger.info("Profil deleted successfully", { id });
       res.status(200).json({ message: "Profil deleted successfully." });
     } catch (error) {
@@ -123,10 +123,10 @@ class ProfilController {
     }
   }
 
-  uploadProfilePicture(req: any, res: any) {
+  async uploadProfilePicture(req: any, res: any) {
     const { id } = req.params;
     try {
-      const profil = profilModel.search("id", "==", id);
+      const profil = await profilModel.search("id", "==", id);
       if (profil.length === 0) {
         logger.warn("Profil not found for uploadProfilePicture", { id });
         res.status(404).json({ message: "Profil not found." });
@@ -153,7 +153,7 @@ class ProfilController {
       const avatar = req.files.avatar;
       const uploadPath = __dirname + "/../../tmp/uploads/" + avatar.name;
 
-      avatar.mv(uploadPath, (err: any) => {
+      avatar.mv(uploadPath, async (err: any) => {
         if (err) {
           logger.error("Failed to upload file", { id, error: err });
           res.status(500).json({ message: "Failed to upload file." });
@@ -161,7 +161,7 @@ class ProfilController {
         }
 
         const profilData = { avatarUrl: avatar.name };
-        profilModel.update(id, profilData);
+        await profilModel.update(id, profilData);
 
         logger.info("Profile picture uploaded successfully", {
           id,
@@ -183,10 +183,10 @@ class ProfilController {
     }
   }
 
-  getProfilePicture(req: Request, res: Response) {
+  async getProfilePicture(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const profil = profilModel.search("id", "==", id);
+      const profil = await profilModel.search("id", "==", id);
 
       if (profil.length === 0) {
         logger.warn("Profile picture not found", { id });
@@ -224,10 +224,10 @@ class ProfilController {
     }
   }
 
-  deleteProfilePicture(req: Request, res: Response) {
+  async deleteProfilePicture(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const profil = profilModel.search("id", "==", id);
+      const profil = await profilModel.search("id", "==", id);
       if (profil.length === 0) {
         logger.warn("Profil not found for deleteProfilePicture", { id });
         res.status(404).json({ message: "Profil not found." });
@@ -249,7 +249,7 @@ class ProfilController {
         fs.unlinkSync(filePath);
       }
 
-      profilModel.update(id, { avatarUrl: "" });
+      await profilModel.update(id, { avatarUrl: "" });
 
       logger.info("Profile picture deleted successfully", { id });
       res

@@ -33,8 +33,8 @@ export const groqService = {
 
 export const groqCreateSummaryKMS = async (userId: string) => {
   try {
-    const data = anthropometryModel.search("userId", "==", userId);
-    const userData = userModel.search("id", "==", userId);
+    const data = await anthropometryModel.search("userId", "==", userId);
+    const userData = await userModel.search("id", "==", userId);
 
     // Get the 10 most recent data points
     const last10Data = data.slice(-10);
@@ -168,8 +168,8 @@ function removeThinkTag(content: string) {
 }
 
 export const groqCreateSummaryAnthropometry = async (userId: string) => {
-  const data = anthropometryModel.search("userId", "==", userId);
-  const userData = userModel.search("id", "==", userId);
+  const data = await anthropometryModel.search("userId", "==", userId);
+  const userData = await userModel.search("id", "==", userId);
 
   // di dalam data ada date gunakan 10 data terakhir
   const last10Data = data.slice(-10);

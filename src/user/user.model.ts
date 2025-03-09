@@ -1,8 +1,9 @@
-import { Schema } from "../../jsonORM/assets/types";
-import JsonORM from "../../jsonORM/jsonHandler";
 import { anthropometryModel } from "../anthropometry/antropomerty.model";
 import { groqModel } from "../groq/groq.model";
 import { profilModel } from "../profil/profil.model";
+import FirebaseService from "../../firebaseORM/FirebaseService";
+import { firebaseConfig } from "../utils/firebase.config";
+import { Schema } from "../../firebaseORM/assets/type";
 
 // User schema interface
 export interface IUser {
@@ -25,27 +26,27 @@ export const UserSchema: Schema = {
   iotIsAllowed: "boolean",
 };
 
-const userModel = new JsonORM("user", UserSchema);
+const userModel = new FirebaseService("users", UserSchema, firebaseConfig);
 
 userModel.setRelation("antropometry", {
   model: anthropometryModel,
   type: "one-to-many",
   foreignKey: "userId",
-  localKey: "id"
+  localKey: "id",
 });
 
 userModel.setRelation("profil", {
   model: profilModel,
   type: "one-to-one",
   foreignKey: "userId",
-  localKey: "id"
-})
+  localKey: "id",
+});
 
 userModel.setRelation("groq", {
   model: groqModel,
   type: "one-to-many",
   foreignKey: "userId",
-  localKey: "id"
-})
+  localKey: "id",
+});
 
-export {userModel}
+export { userModel };

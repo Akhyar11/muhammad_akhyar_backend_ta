@@ -8,7 +8,7 @@ export default class AuthController {
   login = async (req: Request, res: Response): Promise<void> => {
     try {
       const { body } = req;
-      const user = userModel.search("username", "==", body.username);
+      const user = await userModel.search("username", "==", body.username);
 
       if (user.length === 0) {
         logger.warn("Login attempt with invalid username", {
@@ -41,7 +41,7 @@ export default class AuthController {
         process.env.JWT_SECRET
       );
 
-      userModel.update(user[0].id, { ...user[0], token });
+      await userModel.update(user[0].id, { ...user[0], token });
       logger.info("User logged in successfully", {
         username: user[0].username,
       });
@@ -56,7 +56,7 @@ export default class AuthController {
   logout = async (req: Request, res: Response): Promise<void> => {
     try {
       const { body } = req;
-      const user = userModel.search("token", "==", body.token);
+      const user = await userModel.search("token", "==", body.token);
 
       if (user.length === 0) {
         logger.warn("Logout attempt with invalid token", { token: body.token });
@@ -77,7 +77,7 @@ export default class AuthController {
         return;
       }
 
-      userModel.update(user[0].id, { ...user[0], token: "" });
+      await userModel.update(user[0].id, { ...user[0], token: "" });
       logger.info("User logged out successfully", {
         username: user[0].username,
       });
@@ -91,7 +91,7 @@ export default class AuthController {
   register = async (req: Request, res: Response): Promise<void> => {
     try {
       const { body } = req;
-      const user = userModel.search("username", "==", body.username);
+      const user = await userModel.search("username", "==", body.username);
 
       if (user[0]) {
         logger.warn("Registration attempt for existing user", {
@@ -112,7 +112,7 @@ export default class AuthController {
         iotIsAllowed: false,
       };
 
-      const newUser = userModel.create({
+      const newUser = await userModel.create({
         ...dummyUser,
         ...body,
         password: hashedPassword,
@@ -128,7 +128,7 @@ export default class AuthController {
     }
   };
 
-  me = (req: Request, res: Response) => {
+  me = async (req: Request, res: Response) => {
     try {
       const { body } = req;
 
@@ -138,7 +138,7 @@ export default class AuthController {
         return;
       }
 
-      const user = userModel.advancedSearch({
+      const user = await userModel.advancedSearch({
         field: "token",
         operator: "==",
         value: body.token,

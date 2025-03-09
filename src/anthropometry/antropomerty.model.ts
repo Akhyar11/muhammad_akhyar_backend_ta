@@ -1,5 +1,6 @@
-import { Schema } from "../../jsonORM/assets/types";
-import JsonORM from "../../jsonORM/jsonHandler";
+import { Schema } from "../../firebaseORM/assets/type";
+import FirebaseService from "../../firebaseORM/FirebaseService";
+import { firebaseConfig } from "../utils/firebase.config";
 
 export const AnthropometrySchema: Schema = {
   id: "string",
@@ -15,7 +16,8 @@ export const AnthropometrySchema: Schema = {
   notes: "string",
 };
 
-export const anthropometryModel = new JsonORM(
+export const anthropometryModel = new FirebaseService(
   "anthropometry",
-  AnthropometrySchema
+  AnthropometrySchema,
+  firebaseConfig
 );
