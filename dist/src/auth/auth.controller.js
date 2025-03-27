@@ -69,14 +69,17 @@ class AuthController {
                     res.status(401).json({ message: "Invalid token" });
                     return;
                 }
-                const isPasswordCorrect = yield bcrypt_1.default.compare(body.password, user[0].password);
-                if (!isPasswordCorrect) {
-                    logger_util_1.default.warn("Logout attempt with invalid password", {
-                        username: user[0].username,
-                    });
-                    res.status(401).json({ message: "Invalid password" });
-                    return;
-                }
+                // const isPasswordCorrect = await bcrypt.compare(
+                //   body.password,
+                //   user[0].password
+                // );
+                // if (!isPasswordCorrect) {
+                //   logger.warn("Logout attempt with invalid password", {
+                //     username: user[0].username,
+                //   });
+                //   res.status(401).json({ message: "Invalid password" });
+                //   return;
+                // }
                 yield user_model_1.userModel.update(user[0].id, Object.assign(Object.assign({}, user[0]), { token: "" }));
                 logger_util_1.default.info("User logged out successfully", {
                     username: user[0].username,

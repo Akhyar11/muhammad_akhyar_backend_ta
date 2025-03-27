@@ -71,18 +71,18 @@ export default class AuthController {
         return;
       }
 
-      const isPasswordCorrect = await bcrypt.compare(
-        body.password,
-        user[0].password
-      );
+      // const isPasswordCorrect = await bcrypt.compare(
+      //   body.password,
+      //   user[0].password
+      // );
 
-      if (!isPasswordCorrect) {
-        logger.warn("Logout attempt with invalid password", {
-          username: user[0].username,
-        });
-        res.status(401).json({ message: "Invalid password" });
-        return;
-      }
+      // if (!isPasswordCorrect) {
+      //   logger.warn("Logout attempt with invalid password", {
+      //     username: user[0].username,
+      //   });
+      //   res.status(401).json({ message: "Invalid password" });
+      //   return;
+      // }
 
       await userModel.update(user[0].id, { ...user[0], token: "" });
       logger.info("User logged out successfully", {

@@ -93,3 +93,5 @@
 {"error":{"code":"ENOENT","errno":-4058,"path":"C:\\Users\\MACMA\\Documents\\code\\node-project\\backend-ta-2024\\dist\\src\\temp\\Anthropometry_cfbc49f7-325d-4846-85da-1bb7ecf70540.xlsx","syscall":"open"},"level":"error","message":"Failed to export anthropometry data","service":"profil-service","timestamp":"2025-03-01 14:38:07"}
 {"error":{"code":"ENOENT","errno":-4058,"path":"C:\\Users\\MACMA\\Documents\\code\\node-project\\backend-ta-2024\\dist\\temp\\Anthropometry_cfbc49f7-325d-4846-85da-1bb7ecf70540.xlsx","syscall":"open"},"level":"error","message":"Failed to export anthropometry data","service":"profil-service","timestamp":"2025-03-01 14:39:25"}
 {"error":{},"level":"error","message":"Failed to logout","service":"profil-service","timestamp":"2025-03-27 11:18:21"}
+{"error":{},"level":"error","message":"Failed to logout","service":"profil-service","timestamp":"2025-03-27 12:08:59"}
+{"error":{},"level":"error","message":"Failed to logout","service":"profil-service","timestamp":"2025-03-27 12:10:28"}
