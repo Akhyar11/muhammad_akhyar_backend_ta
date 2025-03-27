@@ -165,10 +165,9 @@ export default class AuthController {
         ...profil,
         token: user[0].token,
         id: user[0].id,
-        username: body.username,
+        username: user[0].username,
         jk: user[0].jk,
         tgl_lahir: user[0].tgl_lahir,
-        email: user[0].email,
       };
 
       if (user.length === 0) {
