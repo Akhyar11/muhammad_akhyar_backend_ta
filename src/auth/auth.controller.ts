@@ -168,6 +168,7 @@ export default class AuthController {
         username: body.username,
         jk: user[0].jk,
         tgl_lahir: user[0].tgl_lahir,
+        email: user[0].email,
       };
 
       if (user.length === 0) {
