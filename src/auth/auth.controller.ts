@@ -158,6 +158,18 @@ export default class AuthController {
         withOutFields: ["password", "token"],
       });
 
+      const profils = await profilModel.search("userId", "==", user[0].id);
+      const profil = profils[0];
+
+      const data = {
+        ...profil,
+        token: user[0].token,
+        id: user[0].id,
+        username: body.username,
+        jk: user[0].jk,
+        tgl_lahir: user[0].tgl_lahir,
+      };
+
       if (user.length === 0) {
         logger.warn("Invalid token used in me endpoint", { token: body.token });
         res.status(401).json({ message: "not login, please login" });
@@ -167,7 +179,7 @@ export default class AuthController {
       logger.info("User retrieved successfully from me endpoint", {
         username: user[0].username,
       });
-      res.status(200).json({ data: user[0] });
+      res.status(200).json({ data });
     } catch (error) {
       console.log(error);
       logger.error("Failed to get user from me endpoint", { error });
