@@ -117,13 +117,20 @@ class ProfilController {
             const { id } = req.params;
             const profilData = req.body;
             try {
-                // chekc if username already
-                yield profil_model_1.profilModel.update(id, profilData);
+                const profils = yield profil_model_1.profilModel.search("userId", "==", id);
+                if (!profils[0]) {
+                    logger_util_1.default.warn("Profil not found for updateProfil", { id });
+                    res.status(404).json({ message: "Profil not found." });
+                    return;
+                }
+                const profil = Object.assign(Object.assign({ userId: "", nama_lengkap: "", avatarFileId: "", avatarUrl: "", summary: "" }, profils[0]), profilData);
+                yield profil_model_1.profilModel.update(profils[0].id, profil);
                 logger_util_1.default.info("Profil updated successfully", { id, profilData });
                 res.status(200).json({ message: "Profil updated successfully." });
             }
             catch (error) {
                 logger_util_1.default.error("Error in updateProfil", { id, error });
+                console.log(error);
                 res.status(400).json({ message: "Internal server error" });
             }
         });
@@ -146,13 +153,14 @@ class ProfilController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
+                const file = req.files["picture"];
                 // Pastikan file ada dalam request
-                if (!req.file) {
+                if (!file) {
                     res.status(400).json({ message: "No file uploaded" });
                     return;
                 }
                 // Dapatkan data profil
-                const profils = yield profil_model_1.profilModel.search("id", "==", id);
+                const profils = yield profil_model_1.profilModel.search("userId", "==", id);
                 const profil = profils[0];
                 if (!profil) {
                     res.status(404).json({ message: "Profil not found" });
@@ -171,10 +179,10 @@ class ProfilController {
                     }
                 }
                 // Upload file baru ke Google Drive
-                const fileName = `profile_${id}_${Date.now()}${req.file.originalname.substring(req.file.originalname.lastIndexOf("."))}`;
-                const { fileId, webContentLink } = yield (0, google_drive_util_1.uploadBufferToDrive)(req.file.buffer, fileName, req.file.mimetype);
+                const fileName = `profile_${id}_${Date.now()}${file.name.substring(file.name.lastIndexOf("."))}`;
+                const { fileId, webContentLink } = yield (0, google_drive_util_1.uploadBufferToDrive)(file.data, fileName, file.mimetype);
                 // Update data profil dengan URL dan fileId baru
-                yield profil_model_1.profilModel.update(id, {
+                yield profil_model_1.profilModel.update(profil.id, {
                     avatarUrl: webContentLink,
                     avatarFileId: fileId,
                 });
@@ -187,6 +195,7 @@ class ProfilController {
             }
             catch (error) {
                 logger_util_1.default.error("Failed to upload profile picture", { error });
+                console.error("Full upload error:", error);
                 res.status(500).json({ message: "Failed to upload profile picture" });
                 return;
             }
@@ -197,7 +206,7 @@ class ProfilController {
             try {
                 const { id } = req.params;
                 // Dapatkan data profil
-                const profils = yield profil_model_1.profilModel.search("id", "==", id);
+                const profils = yield profil_model_1.profilModel.search("userId", "==", id);
                 const profil = profils[0];
                 if (!profil) {
                     res.status(404).json({ message: "Profil not found" });
@@ -238,7 +247,7 @@ class ProfilController {
             try {
                 const { id } = req.params;
                 // Dapatkan data profil
-                const profils = yield profil_model_1.profilModel.search("id", "==", id);
+                const profils = yield profil_model_1.profilModel.search("userId", "==", id);
                 const profil = profils[0];
                 if (!profil) {
                     res.status(404).json({ message: "Profil not found" });
@@ -252,7 +261,7 @@ class ProfilController {
                 // Hapus file dari Google Drive
                 yield (0, google_drive_util_1.deleteFileFromDrive)(profil.avatarFileId);
                 // Update data profil
-                yield profil_model_1.profilModel.update(id, {
+                yield profil_model_1.profilModel.update(profil.id, {
                     avatarUrl: "",
                     avatarFileId: "",
                 });

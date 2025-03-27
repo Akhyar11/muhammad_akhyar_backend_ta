@@ -79,6 +79,67 @@ class FirebaseService {
     this.db = getFirestore(this.firebaseApp);
     this.rtdb = getDatabase(this.firebaseApp);
     this.collectionName = modelName;
+    this.updateDataBaseOnSchema();
+  }
+
+  private async updateDataBaseOnSchema(): Promise<void> {
+    if (this.cachedData.length === 0) {
+      // Load data first if cache is empty
+      await this.readFromFirestore();
+    }
+
+    let hasChanges = false;
+    const updatedData = this.cachedData.map((item) => {
+      let itemChanged = false;
+      const updatedItem = { ...item };
+
+      // Check each field in the schema
+      for (const key in this.schema) {
+        if (!(key in updatedItem)) {
+          // Field exists in schema but not in data, add default value
+          updatedItem[key] = this.getDefaultValueForType(this.schema[key]);
+          itemChanged = true;
+        }
+      }
+
+      if (itemChanged) {
+        hasChanges = true;
+      }
+
+      return updatedItem;
+    });
+
+    // If there are changes, write back to Firestore
+    if (hasChanges) {
+      await this.writeToFirestore(updatedData, "overwrite");
+      this.cachedData = updatedData;
+    }
+  }
+
+  private getDefaultValueForType(typeDef: SchemaDefinition): any {
+    if (typeof typeDef === "string") {
+      // Handle primitive types
+      switch (typeDef) {
+        case "string":
+          return "";
+        case "number":
+          return 0;
+        case "boolean":
+          return false;
+        default:
+          return null;
+      }
+    } else if (Array.isArray(typeDef)) {
+      // For array types, return an empty array
+      return [];
+    } else {
+      // For complex object types, recursively build default object
+      const defaultObj: Record<string, any> = {};
+      for (const key in typeDef) {
+        defaultObj[key] = this.getDefaultValueForType(typeDef[key]);
+      }
+      return defaultObj;
+    }
   }
 
   private async readFromFirestore(): Promise<any[]> {

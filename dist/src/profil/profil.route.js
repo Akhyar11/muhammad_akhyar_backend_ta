@@ -20,9 +20,9 @@ class ProfilRoute {
         this.router.put("/profils/:id", this.profilController.updateProfil); // Memperbarui profil berdasarkan ID
         this.router.delete("/profils/:id", this.profilController.deleteProfil); // Menghapus profil berdasarkan ID
         // Rute untuk meng-upload foto pengguna
-        this.router.post("/:id/picture", upload_middleware_1.upload.single("avatar"), this.profilController.uploadProfilePicture);
-        this.router.get("/:id/picture", this.profilController.getProfilePicture);
-        this.router.delete("/:id/picture", this.profilController.deleteProfilePicture);
+        this.router.post("/profils/:id/upload", upload_middleware_1.upload.single("picture"), this.profilController.uploadProfilePicture);
+        this.router.get("/profils/:id/picture", this.profilController.getProfilePicture);
+        this.router.delete("/profils/:id/picture", this.profilController.deleteProfilePicture);
     }
 }
 exports.default = new ProfilRoute().router; // Ekspor instance router

@@ -16,6 +16,7 @@ const user_model_1 = require("../user/user.model");
 const bcrypt_1 = __importDefault(require("bcrypt")); // Perbaiki typo dari 'bycryp' menjadi 'bcrypt'
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const logger_util_1 = __importDefault(require("../utils/logger.util")); // Import the logger
+const profil_model_1 = require("../profil/profil.model");
 class AuthController {
     constructor() {
         this.login = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -46,13 +47,9 @@ class AuthController {
                 logger_util_1.default.info("User logged in successfully", {
                     username: user[0].username,
                 });
-                res.status(200).json({
-                    token,
-                    id: user[0].id,
-                    username: body.username,
-                    jk: user[0].jk,
-                    tgl_lahir: user[0].tgl_lahir,
-                });
+                const profils = yield profil_model_1.profilModel.search("userId", "==", user[0].id);
+                const profil = profils[0];
+                res.status(200).json(Object.assign(Object.assign({}, profil), { token, id: user[0].id, username: body.username, jk: user[0].jk, tgl_lahir: user[0].tgl_lahir }));
             }
             catch (error) {
                 console.log(error);

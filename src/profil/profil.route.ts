@@ -25,13 +25,16 @@ class ProfilRoute {
 
     // Rute untuk meng-upload foto pengguna
     this.router.post(
-      "/:id/picture",
-      upload.single("avatar"),
+      "/profils/:id/upload",
+      upload.single("picture"),
       this.profilController.uploadProfilePicture
     );
-    this.router.get("/:id/picture", this.profilController.getProfilePicture);
+    this.router.get(
+      "/profils/:id/picture",
+      this.profilController.getProfilePicture
+    );
     this.router.delete(
-      "/:id/picture",
+      "/profils/:id/picture",
       this.profilController.deleteProfilePicture
     );
   }

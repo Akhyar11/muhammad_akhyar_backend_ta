@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadBufferToDrive = uploadBufferToDrive;
@@ -15,20 +18,24 @@ exports.deleteFileFromDrive = deleteFileFromDrive;
 exports.getFileFromDrive = getFileFromDrive;
 const googleapis_1 = require("googleapis");
 const stream_1 = require("stream");
-// Pastikan variabel lingkungan berikut telah didefinisikan:
-// GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, GOOGLE_DRIVE_FOLDER_ID, dsb.
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config(); // Memuat variabel lingkungan dari .env
 // Konfigurasi autentikasi menggunakan service account
+const privateKey = (_a = process.env.GOOGLE_PRIVATE_KEY) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, "\n");
+if (!privateKey)
+    throw new Error("GOOGLE_PRIVATE_KEY tidak ditemukan!");
+console.log(privateKey);
 const auth = new googleapis_1.google.auth.JWT({
     email: process.env.GOOGLE_CLIENT_EMAIL,
-    key: (_a = process.env.GOOGLE_PRIVATE_KEY) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, "\n"),
+    key: privateKey,
     scopes: ["https://www.googleapis.com/auth/drive"],
 });
 const drive = googleapis_1.google.drive({ version: "v3", auth });
 /**
- * Mengupload file yang dikirimkan melalui API (sebagai Buffer) ke Google Drive.
- * @param fileBuffer - Buffer berisi data file yang diupload.
+ * Mengupload file ke Google Drive.
+ * @param fileBuffer - Buffer data file.
  * @param fileName - Nama file yang akan digunakan di Google Drive.
- * @param mimeType - Tipe MIME file yang diupload.
+ * @param mimeType - Jenis file (contoh: "image/png", "application/pdf").
  * @returns Object yang berisi fileId dan webContentLink.
  */
 function uploadBufferToDrive(fileBuffer, fileName, mimeType) {
@@ -53,6 +60,7 @@ function uploadBufferToDrive(fileBuffer, fileName, mimeType) {
             if (!fileId) {
                 throw new Error("Gagal mendapatkan file ID dari Google Drive.");
             }
+            // Mengatur file agar bisa diakses oleh siapa saja (public link)
             yield drive.permissions.create({
                 fileId: fileId,
                 requestBody: {
@@ -64,28 +72,28 @@ function uploadBufferToDrive(fileBuffer, fileName, mimeType) {
                 fileId: fileId,
                 fields: "webViewLink, webContentLink",
             });
-            const webContentLink = result.data.webContentLink || "";
-            return { fileId, webContentLink };
+            return {
+                fileId,
+                webContentLink: result.data.webContentLink || "",
+            };
         }
         catch (error) {
-            console.error("Error during file upload:", error);
+            console.error("Error saat upload file:", error);
             throw error;
         }
     });
 }
 /**
- * Menghapus file di Google Drive berdasarkan fileId.
+ * Menghapus file dari Google Drive.
  * @param fileId - ID file pada Google Drive.
  */
 function deleteFileFromDrive(fileId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield drive.files.delete({
-                fileId: fileId,
-            });
+            yield drive.files.delete({ fileId });
         }
         catch (error) {
-            console.error("Error during file deletion:", error);
+            console.error("Error saat menghapus file:", error);
             throw error;
         }
     });
@@ -93,7 +101,7 @@ function deleteFileFromDrive(fileId) {
 /**
  * Mengambil file dari Google Drive dalam bentuk Buffer.
  * @param fileId - ID file pada Google Drive.
- * @returns Buffer yang berisi data file.
+ * @returns Buffer berisi data file.
  */
 function getFileFromDrive(fileId) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -111,13 +119,13 @@ function getFileFromDrive(fileId) {
                     resolve(Buffer.concat(chunks));
                 });
                 response.data.on("error", (err) => {
-                    console.error("Error during file download:", err);
+                    console.error("Error saat mendownload file:", err);
                     reject(err);
                 });
             });
         }
         catch (error) {
-            console.error("Error during getFileFromDrive:", error);
+            console.error("Error saat getFileFromDrive:", error);
             throw error;
         }
     });

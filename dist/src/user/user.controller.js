@@ -30,6 +30,46 @@ class UserController {
                 res.status(500).json({ error: "Failed to get users" });
             }
         });
+        this.updatePassword = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const { password_lama, password_baru } = req.body;
+            try {
+                // Validate input
+                if (!password_lama || !password_baru) {
+                    logger_util_1.default.warn("Missing password fields", { id });
+                    res
+                        .status(400)
+                        .json({ error: "Both old and new passwords are required" });
+                    return;
+                }
+                // Find the user
+                const users = yield user_model_1.userModel.search("id", "==", id);
+                if (users.length === 0) {
+                    logger_util_1.default.warn("User not found for password update", { id });
+                    res.status(404).json({ error: "User not found" });
+                    return;
+                }
+                const user = users[0];
+                // Verify old password
+                const isPasswordCorrect = yield bcrypt_1.default.compare(password_lama, user.password);
+                if (!isPasswordCorrect) {
+                    logger_util_1.default.warn("Incorrect old password", { id });
+                    res.status(400).json({ error: "Incorrect old password" });
+                    return;
+                }
+                // Hash new password
+                const hashedNewPassword = yield bcrypt_1.default.hash(password_baru, 10);
+                // Update user with new password
+                const updatedUser = Object.assign(Object.assign({}, user), { password: hashedNewPassword });
+                yield user_model_1.userModel.update(id, { password: hashedNewPassword });
+                logger_util_1.default.info("Password updated successfully", { id });
+                res.status(200).json({ message: "Password updated successfully" });
+            }
+            catch (error) {
+                logger_util_1.default.error("Failed to update password", { id, error });
+                res.status(500).json({ error: "Failed to update password" });
+            }
+        });
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { body } = req;
@@ -60,9 +100,9 @@ class UserController {
             try {
                 const { body } = req;
                 const user = yield user_model_1.userModel.search("username", "==", body.username);
-                if (user.length > 0) {
-                    logger_util_1.default.warn("Username is already taken", { username: body.username });
-                    res.status(400).json({ error: "Username is already taken" });
+                if (user.length === 0) {
+                    logger_util_1.default.warn("User not found", { id });
+                    res.status(404).json({ error: "User not found" });
                     return;
                 }
                 if (body.password)

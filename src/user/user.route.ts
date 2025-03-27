@@ -17,6 +17,7 @@ class UserRoute {
     this.router.post("/users", this.userController.createUser);
     this.router.put("/users/:id", this.userController.updateUser);
     this.router.delete("/users/:id", this.userController.deleteUser);
+    this.router.put("/users/:id/password", this.userController.updatePassword);
   }
 }
 

@@ -120,6 +120,7 @@ class ProfilController {
         avatarUrl: "",
         summary: "",
         ...profils[0],
+        ...profilData,
       };
 
       await profilModel.update(profils[0].id, profil);
@@ -127,6 +128,8 @@ class ProfilController {
       res.status(200).json({ message: "Profil updated successfully." });
     } catch (error) {
       logger.error("Error in updateProfil", { id, error });
+
+      console.log(error);
       res.status(400).json({ message: "Internal server error" });
     }
   }
@@ -143,18 +146,20 @@ class ProfilController {
     }
   }
 
-  async uploadProfilePicture(req: any, res: Response) {
+  async uploadProfilePicture(req: Request, res: Response) {
     try {
       const { id } = req.params;
 
+      const file = (req.files as any)["picture"];
+
       // Pastikan file ada dalam request
-      if (!req.file) {
+      if (!file) {
         res.status(400).json({ message: "No file uploaded" });
         return;
       }
 
       // Dapatkan data profil
-      const profils = await profilModel.search("id", "==", id);
+      const profils = await profilModel.search("userId", "==", id);
       const profil = profils[0];
       if (!profil) {
         res.status(404).json({ message: "Profil not found" });
@@ -174,17 +179,17 @@ class ProfilController {
       }
 
       // Upload file baru ke Google Drive
-      const fileName = `profile_${id}_${Date.now()}${req.file.originalname.substring(
-        req.file.originalname.lastIndexOf(".")
+      const fileName = `profile_${id}_${Date.now()}${file.name.substring(
+        file.name.lastIndexOf(".")
       )}`;
       const { fileId, webContentLink } = await uploadBufferToDrive(
-        req.file.buffer,
+        file.data,
         fileName,
-        req.file.mimetype
+        file.mimetype
       );
 
       // Update data profil dengan URL dan fileId baru
-      await profilModel.update(id, {
+      await profilModel.update(profil.id, {
         avatarUrl: webContentLink,
         avatarFileId: fileId,
       });
@@ -197,6 +202,7 @@ class ProfilController {
       return;
     } catch (error) {
       logger.error("Failed to upload profile picture", { error });
+      console.error("Full upload error:", error);
       res.status(500).json({ message: "Failed to upload profile picture" });
       return;
     }
@@ -207,7 +213,7 @@ class ProfilController {
       const { id } = req.params;
 
       // Dapatkan data profil
-      const profils = await profilModel.search("id", "==", id);
+      const profils = await profilModel.search("userId", "==", id);
       const profil = profils[0];
       if (!profil) {
         res.status(404).json({ message: "Profil not found" });
@@ -249,7 +255,7 @@ class ProfilController {
       const { id } = req.params;
 
       // Dapatkan data profil
-      const profils = await profilModel.search("id", "==", id);
+      const profils = await profilModel.search("userId", "==", id);
       const profil = profils[0];
       if (!profil) {
         res.status(404).json({ message: "Profil not found" });
@@ -266,7 +272,7 @@ class ProfilController {
       await deleteFileFromDrive(profil.avatarFileId);
 
       // Update data profil
-      await profilModel.update(id, {
+      await profilModel.update(profil.id, {
         avatarUrl: "",
         avatarFileId: "",
       });

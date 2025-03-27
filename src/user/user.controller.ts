@@ -17,6 +17,60 @@ export default class UserController {
     }
   };
 
+  updatePassword = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const { password_lama, password_baru } = req.body;
+
+    try {
+      // Validate input
+      if (!password_lama || !password_baru) {
+        logger.warn("Missing password fields", { id });
+        res
+          .status(400)
+          .json({ error: "Both old and new passwords are required" });
+        return;
+      }
+
+      // Find the user
+      const users = await userModel.search("id", "==", id);
+      if (users.length === 0) {
+        logger.warn("User not found for password update", { id });
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+
+      const user = users[0];
+
+      // Verify old password
+      const isPasswordCorrect = await bcrypt.compare(
+        password_lama,
+        user.password
+      );
+      if (!isPasswordCorrect) {
+        logger.warn("Incorrect old password", { id });
+        res.status(400).json({ error: "Incorrect old password" });
+        return;
+      }
+
+      // Hash new password
+      const hashedNewPassword = await bcrypt.hash(password_baru, 10);
+
+      // Update user with new password
+      const updatedUser = {
+        ...user,
+        password: hashedNewPassword,
+      };
+
+      await userModel.update(id, { password: hashedNewPassword });
+
+      logger.info("Password updated successfully", { id });
+      res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+      logger.error("Failed to update password", { id, error });
+      res.status(500).json({ error: "Failed to update password" });
+    }
+  };
+
   createUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const { body } = req;

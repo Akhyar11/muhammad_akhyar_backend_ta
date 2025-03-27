@@ -1,23 +1,26 @@
 import { google, drive_v3 } from "googleapis";
 import { PassThrough } from "stream";
+import dotenv from "dotenv";
 
-// Pastikan variabel lingkungan berikut telah didefinisikan:
-// GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, GOOGLE_DRIVE_FOLDER_ID, dsb.
+dotenv.config(); // Memuat variabel lingkungan dari .env
 
 // Konfigurasi autentikasi menggunakan service account
+const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+if (!privateKey) throw new Error("GOOGLE_PRIVATE_KEY tidak ditemukan!");
+
 const auth = new google.auth.JWT({
   email: process.env.GOOGLE_CLIENT_EMAIL,
-  key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+  key: privateKey,
   scopes: ["https://www.googleapis.com/auth/drive"],
 });
 
 const drive: drive_v3.Drive = google.drive({ version: "v3", auth });
 
 /**
- * Mengupload file yang dikirimkan melalui API (sebagai Buffer) ke Google Drive.
- * @param fileBuffer - Buffer berisi data file yang diupload.
+ * Mengupload file ke Google Drive.
+ * @param fileBuffer - Buffer data file.
  * @param fileName - Nama file yang akan digunakan di Google Drive.
- * @param mimeType - Tipe MIME file yang diupload.
+ * @param mimeType - Jenis file (contoh: "image/png", "application/pdf").
  * @returns Object yang berisi fileId dan webContentLink.
  */
 export async function uploadBufferToDrive(
@@ -50,6 +53,7 @@ export async function uploadBufferToDrive(
       throw new Error("Gagal mendapatkan file ID dari Google Drive.");
     }
 
+    // Mengatur file agar bisa diakses oleh siapa saja (public link)
     await drive.permissions.create({
       fileId: fileId,
       requestBody: {
@@ -63,25 +67,25 @@ export async function uploadBufferToDrive(
       fields: "webViewLink, webContentLink",
     });
 
-    const webContentLink = result.data.webContentLink || "";
-    return { fileId, webContentLink };
+    return {
+      fileId,
+      webContentLink: result.data.webContentLink || "",
+    };
   } catch (error) {
-    console.error("Error during file upload:", error);
+    console.error("Error saat upload file:", error);
     throw error;
   }
 }
 
 /**
- * Menghapus file di Google Drive berdasarkan fileId.
+ * Menghapus file dari Google Drive.
  * @param fileId - ID file pada Google Drive.
  */
 export async function deleteFileFromDrive(fileId: string): Promise<void> {
   try {
-    await drive.files.delete({
-      fileId: fileId,
-    });
+    await drive.files.delete({ fileId });
   } catch (error) {
-    console.error("Error during file deletion:", error);
+    console.error("Error saat menghapus file:", error);
     throw error;
   }
 }
@@ -89,7 +93,7 @@ export async function deleteFileFromDrive(fileId: string): Promise<void> {
 /**
  * Mengambil file dari Google Drive dalam bentuk Buffer.
  * @param fileId - ID file pada Google Drive.
- * @returns Buffer yang berisi data file.
+ * @returns Buffer berisi data file.
  */
 export async function getFileFromDrive(fileId: string): Promise<Buffer> {
   try {
@@ -109,13 +113,13 @@ export async function getFileFromDrive(fileId: string): Promise<Buffer> {
       response.data.on("end", () => {
         resolve(Buffer.concat(chunks));
       });
-      response.data.on("error", (err: any) => {
-        console.error("Error during file download:", err);
+      response.data.on("error", (err) => {
+        console.error("Error saat mendownload file:", err);
         reject(err);
       });
     });
   } catch (error) {
-    console.error("Error during getFileFromDrive:", error);
+    console.error("Error saat getFileFromDrive:", error);
     throw error;
   }
 }
