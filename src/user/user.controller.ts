@@ -52,9 +52,9 @@ export default class UserController {
       const { body } = req;
 
       const user = await userModel.search("username", "==", body.username);
-      if (user.length > 0) {
-        logger.warn("Username is already taken", { username: body.username });
-        res.status(400).json({ error: "Username is already taken" });
+      if (user.length === 0) {
+        logger.warn("User not found", { id });
+        res.status(404).json({ error: "User not found" });
         return;
       }
 

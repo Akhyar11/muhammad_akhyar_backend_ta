@@ -106,9 +106,14 @@ class ProfilController {
     const profilData = req.body;
 
     try {
-      // chekc if username already
+      const profils = await profilModel.search("userId", "==", id);
+      if (!profils[0]) {
+        logger.warn("Profil not found for updateProfil", { id });
+        res.status(404).json({ message: "Profil not found." });
+        return;
+      }
 
-      await profilModel.update(id, profilData);
+      await profilModel.update(profils[0].id, profilData);
       logger.info("Profil updated successfully", { id, profilData });
       res.status(200).json({ message: "Profil updated successfully." });
     } catch (error) {
