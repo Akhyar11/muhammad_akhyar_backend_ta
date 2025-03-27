@@ -3,6 +3,7 @@ import { userModel } from "../user/user.model";
 import bcrypt from "bcrypt"; // Perbaiki typo dari 'bycryp' menjadi 'bcrypt'
 import jwt from "jsonwebtoken";
 import logger from "../utils/logger.util"; // Import the logger
+import { profilModel } from "../profil/profil.model";
 
 export default class AuthController {
   login = async (req: Request, res: Response): Promise<void> => {
@@ -46,7 +47,11 @@ export default class AuthController {
         username: user[0].username,
       });
 
+      const profils = await profilModel.search("userId", "==", user[0].id);
+      const profil = profils[0];
+
       res.status(200).json({
+        ...profil,
         token,
         id: user[0].id,
         username: body.username,
