@@ -45,7 +45,14 @@ export default class AuthController {
       logger.info("User logged in successfully", {
         username: user[0].username,
       });
-      res.status(200).json({ token, id: user[0].id, username: body.username });
+
+      res.status(200).json({
+        token,
+        id: user[0].id,
+        username: body.username,
+        jk: user[0].jk,
+        tgl_lahir: user[0].tgl_lahir,
+      });
     } catch (error) {
       console.log(error);
       logger.error("Failed to login", { error });
@@ -84,6 +91,7 @@ export default class AuthController {
       res.status(200).json({ message: "Logged out" });
     } catch (error) {
       logger.error("Failed to logout", { error });
+      console.log(error);
       res.status(500).json({ message: "Failed to logout" });
     }
   };
