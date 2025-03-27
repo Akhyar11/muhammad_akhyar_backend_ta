@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ProfilController from "./profil.controller";
+import { upload } from "../middleware/upload.middleware";
 
 class ProfilRoute {
   public router: Router;
@@ -23,19 +24,14 @@ class ProfilRoute {
     this.router.delete("/profils/:id", this.profilController.deleteProfil); // Menghapus profil berdasarkan ID
 
     // Rute untuk meng-upload foto pengguna
-
     this.router.post(
-      "/profils/:id/upload",
+      "/:id/picture",
+      upload.single("avatar"),
       this.profilController.uploadProfilePicture
     );
-
-    this.router.get(
-      "/profils/:id/avatar",
-      this.profilController.getProfilePicture
-    );
-
+    this.router.get("/:id/picture", this.profilController.getProfilePicture);
     this.router.delete(
-      "/profils/:id/avatar",
+      "/:id/picture",
       this.profilController.deleteProfilePicture
     );
   }

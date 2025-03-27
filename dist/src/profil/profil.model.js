@@ -10,6 +10,7 @@ const firebase_config_1 = require("../utils/firebase.config");
 exports.ProfilSchema = {
     userId: "string",
     nama_lengkap: "string",
+    avatarFileId: "string",
     avatarUrl: "string",
     summary: "string",
 };

@@ -5,6 +5,11 @@ import { validateData } from "../utils/validation.util";
 import path from "path";
 import fs from "fs";
 import logger from "../utils/logger.util";
+import {
+  deleteFileFromDrive,
+  getFileFromDrive,
+  uploadBufferToDrive,
+} from "../utils/google.drive.util";
 
 class ProfilController {
   async createProfil(req: Request, res: Response) {
@@ -77,6 +82,7 @@ class ProfilController {
         const newProfil = {
           userId,
           avatarUrl: "",
+          avatarFileId: "", // Tambahkan field untuk menyimpan fileId dari Google Drive
           nama_lengkap: "",
           summary: "",
         };
@@ -123,141 +129,141 @@ class ProfilController {
     }
   }
 
-  async uploadProfilePicture(req: any, res: any) {
-    const { id } = req.params;
+  async uploadProfilePicture(req: any, res: Response) {
     try {
-      const profil = await profilModel.search("id", "==", id);
-      if (profil.length === 0) {
-        logger.warn("Profil not found for uploadProfilePicture", { id });
-        res.status(404).json({ message: "Profil not found." });
+      const { id } = req.params;
+
+      // Pastikan file ada dalam request
+      if (!req.file) {
+        res.status(400).json({ message: "No file uploaded" });
         return;
       }
 
-      if (!req.files || !req.files.avatar) {
-        logger.warn("No file uploaded for uploadProfilePicture", { id });
-        res.status(400).json({ message: "No file uploaded." });
+      // Dapatkan data profil
+      const profils = await profilModel.search("id", "==", id);
+      const profil = profils[0];
+      if (!profil) {
+        res.status(404).json({ message: "Profil not found" });
         return;
       }
 
-      if (profil[0].avatarUrl !== "") {
-        const existingAvatarPath = path.join(
-          __dirname,
-          "../../uploads",
-          path.basename(profil[0].avatarUrl)
-        );
-        if (fs.existsSync(existingAvatarPath)) {
-          fs.unlinkSync(existingAvatarPath);
+      // Jika sudah ada foto profil sebelumnya, hapus dari Google Drive
+      if (profil.avatarFileId) {
+        try {
+          await deleteFileFromDrive(profil.avatarFileId);
+        } catch (error) {
+          logger.warn("Failed to delete previous profile picture", {
+            id,
+            error,
+          });
         }
       }
 
-      const avatar = req.files.avatar;
-      const uploadPath = __dirname + "/../../tmp/uploads/" + avatar.name;
+      // Upload file baru ke Google Drive
+      const fileName = `profile_${id}_${Date.now()}${req.file.originalname.substring(
+        req.file.originalname.lastIndexOf(".")
+      )}`;
+      const { fileId, webContentLink } = await uploadBufferToDrive(
+        req.file.buffer,
+        fileName,
+        req.file.mimetype
+      );
 
-      avatar.mv(uploadPath, async (err: any) => {
-        if (err) {
-          logger.error("Failed to upload file", { id, error: err });
-          res.status(500).json({ message: "Failed to upload file." });
-          return;
-        }
-
-        const profilData = { avatarUrl: avatar.name };
-        await profilModel.update(id, profilData);
-
-        logger.info("Profile picture uploaded successfully", {
-          id,
-          avatarUrl: avatar.name,
-        });
-        res.status(200).json({
-          message: "Profile picture uploaded successfully.",
-        });
+      // Update data profil dengan URL dan fileId baru
+      await profilModel.update(id, {
+        avatarUrl: webContentLink,
+        avatarFileId: fileId,
       });
-    } catch (error) {
-      const uploadPath =
-        __dirname + "/../../tmp/uploads/" + req.files.avatar.name;
-      if (fs.existsSync(uploadPath)) {
-        fs.unlinkSync(uploadPath);
-      }
 
-      logger.error("Failed to upload profile picture", { id, error });
-      res.status(500).json({ message: "Failed to upload profile picture." });
+      logger.info("Profile picture uploaded successfully", { id });
+      res.status(200).json({
+        message: "Profile picture uploaded successfully",
+        avatarUrl: webContentLink,
+      });
+      return;
+    } catch (error) {
+      logger.error("Failed to upload profile picture", { error });
+      res.status(500).json({ message: "Failed to upload profile picture" });
+      return;
     }
   }
 
   async getProfilePicture(req: Request, res: Response) {
-    const { id } = req.params;
     try {
-      const profil = await profilModel.search("id", "==", id);
+      const { id } = req.params;
 
-      if (profil.length === 0) {
-        logger.warn("Profile picture not found", { id });
-        res.status(404).json({ message: "Profile picture not found." });
+      // Dapatkan data profil
+      const profils = await profilModel.search("id", "==", id);
+      const profil = profils[0];
+      if (!profil) {
+        res.status(404).json({ message: "Profil not found" });
         return;
       }
 
-      if (profil[0].avatarUrl === "") {
-        logger.warn("Profile picture not found", { id });
-        const defaultAvatarPath = path.join(
-          __dirname,
-          "../../tmp/uploads/default-avatar.jpg"
-        );
-        if (fs.existsSync(defaultAvatarPath)) {
-          res.status(200).sendFile(defaultAvatarPath);
-        } else {
-          res
-            .status(404)
-            .json({ message: "Default profile picture not found." });
-        }
+      // Jika tidak ada foto profil
+      if (!profil.avatarFileId) {
+        res.status(404).json({ message: "Profile picture not found" });
         return;
       }
 
-      const filePath = path.join(
-        __dirname,
-        "../../uploads",
-        path.basename(profil[0].avatarUrl)
-      );
+      // Ambil file dari Google Drive
+      const fileBuffer = await getFileFromDrive(profil.avatarFileId);
 
-      logger.info("Profile picture retrieved successfully", { id });
-      res.status(200).sendFile(filePath);
+      // Tentukan tipe konten berdasarkan ekstensi file atau default ke image/jpeg
+      const fileExtension = profil.avatarUrl
+        .substring(profil.avatarUrl.lastIndexOf(".") + 1)
+        .toLowerCase();
+      let contentType = "image/jpeg"; // Default
+
+      if (fileExtension === "png") contentType = "image/png";
+      else if (fileExtension === "gif") contentType = "image/gif";
+      else if (fileExtension === "webp") contentType = "image/webp";
+
+      // Kirim file sebagai response
+      res.setHeader("Content-Type", contentType);
+      res.send(fileBuffer);
+      return;
     } catch (error) {
-      logger.error("Failed to retrieve profile picture", { id, error });
-      res.status(500).json({ message: "Internal server error" });
+      logger.error("Failed to get profile picture", { error });
+      res.status(500).json({ message: "Failed to get profile picture" });
+      return;
     }
   }
 
   async deleteProfilePicture(req: Request, res: Response) {
-    const { id } = req.params;
     try {
-      const profil = await profilModel.search("id", "==", id);
-      if (profil.length === 0) {
-        logger.warn("Profil not found for deleteProfilePicture", { id });
-        res.status(404).json({ message: "Profil not found." });
+      const { id } = req.params;
+
+      // Dapatkan data profil
+      const profils = await profilModel.search("id", "==", id);
+      const profil = profils[0];
+      if (!profil) {
+        res.status(404).json({ message: "Profil not found" });
         return;
       }
 
-      if (profil[0].avatarUrl === "") {
-        logger.warn("No profile picture to delete", { id });
-        res.status(400).json({ message: "No profile picture to delete." });
+      // Jika tidak ada foto profil
+      if (!profil.avatarFileId) {
+        res.status(404).json({ message: "Profile picture not found" });
         return;
       }
 
-      const filePath = path.join(
-        __dirname,
-        "../../uploads",
-        path.basename(profil[0].avatarUrl)
-      );
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
+      // Hapus file dari Google Drive
+      await deleteFileFromDrive(profil.avatarFileId);
 
-      await profilModel.update(id, { avatarUrl: "" });
+      // Update data profil
+      await profilModel.update(id, {
+        avatarUrl: "",
+        avatarFileId: "",
+      });
 
       logger.info("Profile picture deleted successfully", { id });
-      res
-        .status(200)
-        .json({ message: "Profile picture deleted successfully." });
+      res.status(200).json({ message: "Profile picture deleted successfully" });
+      return;
     } catch (error) {
-      logger.error("Failed to delete profile picture", { id, error });
-      res.status(500).json({ message: "Failed to delete profile picture." });
+      logger.error("Failed to delete profile picture", { error });
+      res.status(500).json({ message: "Failed to delete profile picture" });
+      return;
     }
   }
 }

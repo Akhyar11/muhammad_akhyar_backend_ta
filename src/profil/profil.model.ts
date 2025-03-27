@@ -6,6 +6,7 @@ import { firebaseConfig } from "../utils/firebase.config";
 export const ProfilSchema: Schema = {
   userId: "string",
   nama_lengkap: "string",
+  avatarFileId: "string",
   avatarUrl: "string",
   summary: "string",
 };

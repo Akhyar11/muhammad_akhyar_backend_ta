@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import * as XLSX from "xlsx";
-import * as fs from "fs";
 import { anthropometryModel } from "./antropomerty.model";
 import logger from "../utils/logger.util"; // Import the logger
-import path from "path";
+import { uploadBufferToDrive } from "../utils/google.drive.util";
 
 export default class AnthropometryController {
   // Get all anthropometry data by user ID
@@ -52,7 +51,7 @@ export default class AnthropometryController {
     }
   }
 
-  // Get all anthropometry data and export to Excel
+  // Get all anthropometry data and export to Excel via Google Drive
   async exportToExcel(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
@@ -89,25 +88,32 @@ export default class AnthropometryController {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Anthropometry Data");
 
-      // Simpan file ke dalam folder temp
-      const filePath = path.join(
-        __dirname,
-        "../../../tmp/temp",
-        `Anthropometry_${id}.xlsx`
+      // Alih-alih menyimpan ke file lokal, kita akan mengkonversi workbook ke buffer
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "buffer",
+      });
+
+      // Nama file Excel
+      const fileName = `Anthropometry_${id}_${Date.now()}.xlsx`;
+
+      // Upload file Excel ke Google Drive
+      const { fileId, webContentLink } = await uploadBufferToDrive(
+        excelBuffer,
+        fileName,
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
       );
-      XLSX.writeFile(workbook, filePath);
 
-      logger.info("Excel file generated successfully", { filePath });
+      logger.info("Excel file uploaded to Google Drive successfully", {
+        userId: id,
+        fileId,
+        fileName,
+      });
 
-      // Kirim file sebagai response
-      res.download(filePath, `Anthropometry_${id}.xlsx`, (err) => {
-        if (err) {
-          logger.error("Error sending Excel file", { error: err });
-          res.status(500).json({ message: "Error sending file" });
-        }
-
-        // Hapus file setelah dikirim
-        fs.unlinkSync(filePath);
+      // Kirim URL download sebagai response
+      res.status(200).json({
+        message: "Excel file generated successfully",
+        downloadUrl: webContentLink,
       });
     } catch (error) {
       console.log(error);

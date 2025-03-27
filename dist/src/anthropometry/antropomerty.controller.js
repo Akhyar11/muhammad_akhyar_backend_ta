@@ -46,10 +46,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const XLSX = __importStar(require("xlsx"));
-const fs = __importStar(require("fs"));
 const antropomerty_model_1 = require("./antropomerty.model");
 const logger_util_1 = __importDefault(require("../utils/logger.util")); // Import the logger
-const path_1 = __importDefault(require("path"));
+const google_drive_util_1 = require("../utils/google.drive.util");
 class AnthropometryController {
     // Get all anthropometry data by user ID
     getAllById(req, res) {
@@ -92,7 +91,7 @@ class AnthropometryController {
             }
         });
     }
-    // Get all anthropometry data and export to Excel
+    // Get all anthropometry data and export to Excel via Google Drive
     exportToExcel(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -122,18 +121,24 @@ class AnthropometryController {
                 const worksheet = XLSX.utils.json_to_sheet(data);
                 const workbook = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(workbook, worksheet, "Anthropometry Data");
-                // Simpan file ke dalam folder temp
-                const filePath = path_1.default.join(__dirname, "../../../tmp/temp", `Anthropometry_${id}.xlsx`);
-                XLSX.writeFile(workbook, filePath);
-                logger_util_1.default.info("Excel file generated successfully", { filePath });
-                // Kirim file sebagai response
-                res.download(filePath, `Anthropometry_${id}.xlsx`, (err) => {
-                    if (err) {
-                        logger_util_1.default.error("Error sending Excel file", { error: err });
-                        res.status(500).json({ message: "Error sending file" });
-                    }
-                    // Hapus file setelah dikirim
-                    fs.unlinkSync(filePath);
+                // Alih-alih menyimpan ke file lokal, kita akan mengkonversi workbook ke buffer
+                const excelBuffer = XLSX.write(workbook, {
+                    bookType: "xlsx",
+                    type: "buffer",
+                });
+                // Nama file Excel
+                const fileName = `Anthropometry_${id}_${Date.now()}.xlsx`;
+                // Upload file Excel ke Google Drive
+                const { fileId, webContentLink } = yield (0, google_drive_util_1.uploadBufferToDrive)(excelBuffer, fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                logger_util_1.default.info("Excel file uploaded to Google Drive successfully", {
+                    userId: id,
+                    fileId,
+                    fileName,
+                });
+                // Kirim URL download sebagai response
+                res.status(200).json({
+                    message: "Excel file generated successfully",
+                    downloadUrl: webContentLink,
                 });
             }
             catch (error) {

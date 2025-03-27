@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const profil_controller_1 = __importDefault(require("./profil.controller"));
+const upload_middleware_1 = require("../middleware/upload.middleware");
 class ProfilRoute {
     constructor() {
         this.router = (0, express_1.Router)();
@@ -19,9 +20,9 @@ class ProfilRoute {
         this.router.put("/profils/:id", this.profilController.updateProfil); // Memperbarui profil berdasarkan ID
         this.router.delete("/profils/:id", this.profilController.deleteProfil); // Menghapus profil berdasarkan ID
         // Rute untuk meng-upload foto pengguna
-        this.router.post("/profils/:id/upload", this.profilController.uploadProfilePicture);
-        this.router.get("/profils/:id/avatar", this.profilController.getProfilePicture);
-        this.router.delete("/profils/:id/avatar", this.profilController.deleteProfilePicture);
+        this.router.post("/:id/picture", upload_middleware_1.upload.single("avatar"), this.profilController.uploadProfilePicture);
+        this.router.get("/:id/picture", this.profilController.getProfilePicture);
+        this.router.delete("/:id/picture", this.profilController.deleteProfilePicture);
     }
 }
 exports.default = new ProfilRoute().router; // Ekspor instance router
