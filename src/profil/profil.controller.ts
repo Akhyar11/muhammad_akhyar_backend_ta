@@ -149,8 +149,7 @@ class ProfilController {
   async uploadProfilePicture(req: Request, res: Response) {
     try {
       const { id } = req.params;
-
-      const file = (req.files as any)["picture"];
+      const file = (req.files as any)?.["picture"];
 
       // Pastikan file ada dalam request
       if (!file) {
@@ -161,21 +160,15 @@ class ProfilController {
       // Dapatkan data profil
       const profils = await profilModel.search("userId", "==", id);
       const profil = profils[0];
+
       if (!profil) {
-        res.status(404).json({ message: "Profil not found" });
+        res.status(400).json({ message: "Profil not found" });
         return;
       }
 
       // Jika sudah ada foto profil sebelumnya, hapus dari Google Drive
-      if (profil.avatarFileId) {
-        try {
-          await deleteFileFromDrive(profil.avatarFileId);
-        } catch (error) {
-          logger.warn("Failed to delete previous profile picture", {
-            id,
-            error,
-          });
-        }
+      if (profil.avatarFileId && profil.avatarFileId !== "") {
+        await deleteFileFromDrive(profil.avatarFileId);
       }
 
       // Upload file baru ke Google Drive
@@ -195,16 +188,21 @@ class ProfilController {
       });
 
       logger.info("Profile picture uploaded successfully", { id });
+
       res.status(200).json({
         message: "Profile picture uploaded successfully",
         avatarUrl: webContentLink,
       });
       return;
     } catch (error) {
-      logger.error("Failed to upload profile picture", { error });
-      console.error("Full upload error:", error);
-      res.status(500).json({ message: "Failed to upload profile picture" });
-      return;
+      console.log(error);
+      if (!res.headersSent) {
+        // ✅ Pastikan response belum dikirim sebelum mengirim error
+        logger.error("Failed to upload profile picture", { error });
+        console.error("Full upload error:", error);
+        res.status(500).json({ message: "Failed to upload profile picture" });
+        return;
+      }
     }
   }
 

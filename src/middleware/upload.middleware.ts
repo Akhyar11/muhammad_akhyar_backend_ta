@@ -78,11 +78,12 @@ export const upload = {
       // First check if files are already in req.files
       // Then use multer as fallback
       (req: Request, res: Response, next: NextFunction) => {
-        handleExistingFiles(req, res, next);
+        // handleExistingFiles(req, res, next);
 
         // Skip multer if files are already processed
         if (req.files && Object.keys(req.files).length > 0) {
-          return next();
+          next();
+          return;
         }
 
         uploadConfig.single(fieldName)(req, res, (err) => {
@@ -90,18 +91,21 @@ export const upload = {
             if (err instanceof multer.MulterError) {
               // Multer error (file too large, unexpected field, etc.)
               if (err.code === "LIMIT_FILE_SIZE") {
-                return res.status(413).json({
+                res.status(413).json({
                   error: "File too large. Maximum size is 5MB.",
                 });
+                return;
               }
-              return res.status(400).json({
+              res.status(400).json({
                 error: `Upload error: ${err.message}`,
               });
+              return;
             } else {
               // Unexpected error (like "Unexpected end of form")
-              return res.status(400).json({
+              res.status(400).json({
                 error: err.message || "Error processing upload",
               });
+              return;
             }
           }
           next();

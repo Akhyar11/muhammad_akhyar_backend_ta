@@ -33,6 +33,7 @@ export class Server {
   private configureMiddleware(): void {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(fileUpload());
     this.app.use(this.middlewareService.isAuthenticated);
     this.app.use(this.iotMiddlewareService.isAuthenticated);
