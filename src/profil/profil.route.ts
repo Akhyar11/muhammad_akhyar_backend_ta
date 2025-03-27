@@ -25,7 +25,7 @@ class ProfilRoute {
 
     // Rute untuk meng-upload foto pengguna
     this.router.post(
-      "/profils/:id/upload",
+      "/profils/upload/:id",
       upload.single("picture"),
       this.profilController.uploadProfilePicture
     );
