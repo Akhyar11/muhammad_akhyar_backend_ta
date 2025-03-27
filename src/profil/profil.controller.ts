@@ -113,7 +113,16 @@ class ProfilController {
         return;
       }
 
-      await profilModel.update(profils[0].id, profilData);
+      const profil = {
+        userId: "",
+        nama_lengkap: "",
+        avatarFileId: "",
+        avatarUrl: "",
+        summary: "",
+        ...profils[0],
+      };
+
+      await profilModel.update(profils[0].id, profil);
       logger.info("Profil updated successfully", { id, profilData });
       res.status(200).json({ message: "Profil updated successfully." });
     } catch (error) {
