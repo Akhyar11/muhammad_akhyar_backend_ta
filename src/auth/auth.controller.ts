@@ -155,7 +155,7 @@ export default class AuthController {
         field: "token",
         operator: "==",
         value: body.token,
-        withOutFields: ["password", "token"],
+        withOutFields: ["password"],
       });
 
       const profils = await profilModel.search("userId", "==", user[0].id);
