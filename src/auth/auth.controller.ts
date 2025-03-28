@@ -131,6 +131,14 @@ export default class AuthController {
         password: hashedPassword,
       });
 
+      await profilModel.create({
+        userId: newUser.id,
+        nama_lengkap: "",
+        avatarFileId: "",
+        avatarUrl: "",
+        summary: "",
+      });
+
       logger.info("User registered successfully", {
         username: dummyUser.username,
       });

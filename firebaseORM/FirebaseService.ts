@@ -233,7 +233,7 @@ class FirebaseService {
    *
    * @throws Will throw an error if the data does not conform to the schema.
    */
-  async create(data: any): Promise<void> {
+  async create(data: any): Promise<any> {
     const timestamp = new Date().toString();
     const id = doc(collection(this.db, "auto-ids")).id; // Generate unique ID
 
@@ -262,6 +262,7 @@ class FirebaseService {
 
     // Log operation
     await this.log(`Added data with ID: ${id}`);
+    return data;
   }
 
   /**
