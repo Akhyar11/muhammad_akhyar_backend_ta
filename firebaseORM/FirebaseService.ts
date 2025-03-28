@@ -83,10 +83,7 @@ class FirebaseService {
   }
 
   private async updateDataBaseOnSchema(): Promise<void> {
-    if (this.cachedData.length === 0) {
-      // Load data first if cache is empty
-      await this.readFromFirestore();
-    }
+    await this.readFromFirestore();
 
     let hasChanges = false;
     const updatedData = this.cachedData.map((item) => {
