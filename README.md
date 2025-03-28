@@ -1,60 +1,99 @@
+# Dokumentasi API Sistem Backend
+
+## Diagram Alur Sistem
+
 ```mermaid
 graph TD
-    A[Client/User] --> B{Authentication Required?}
-    B -->|Yes| C[Login/Register]
-    B -->|No| D[Public Endpoints]
+    A[Klien/Pengguna] --> B{Memerlukan Autentikasi?}
 
-    C --> E[Get JWT Token]
-    E --> F{Choose Service}
-    D --> F
+    %% Titik Akhir Publik
+    B -->|Tidak| D[Titik Akhir Publik]
+    D --> D1[Login/Registrasi]
+    D --> D2[Akses Data IoT]
+    D --> D3[Unggah Profil]
 
-    F --> G[User Management]
-    F --> H[Anthropometry Service]
-    F --> I[Chat Service]
-    F --> J[Profile Service]
-    F --> K[IoT Service]
+    %% Alur Autentikasi
+    B -->|Ya| C[Login Diperlukan]
+    C --> E[Dapatkan Token JWT]
+    E --> F[Layanan Terlindungi]
 
-    %% User Management Flow
-    G --> G1[Create User]
-    G --> G2[Update User]
-    G --> G3[Delete User]
-    G --> G4[Get User]
-    G --> G5[Update Password]
+    %% Layanan Terlindungi
+    F --> G[Manajemen Pengguna]
+    F --> H[Layanan Antropometri]
+    F --> I[Layanan Obrolan]
+    F --> J[Layanan Profil]
+    F --> K[Manajemen IoT]
 
-    %% Anthropometry Service Flow
-    H --> H1[Add Measurements]
-    H --> H2[Get Measurements]
-    H --> H3[Get KMS Analysis]
-    H --> H4[Get BMI Analysis]
+    %% Alur Manajemen Pengguna
+    G --> G1[Buat Pengguna]
+    G --> G2[Perbarui Pengguna]
+    G --> G3[Hapus Pengguna]
+    G --> G4[Dapatkan Pengguna]
+    G --> G5[Perbarui Kata Sandi]
 
-    %% Chat Service Flow
-    I --> I1[Start Conversation]
-    I --> I2[Get Chat History]
-    I --> I3[Get AI Response]
+    %% Alur Layanan Antropometri
+    H --> H1[Tambah Pengukuran]
+    H --> H2[Dapatkan Pengukuran]
+    H --> H3[Dapatkan Analisis KMS]
+    H --> H4[Dapatkan Analisis BMI]
 
-    %% Profile Service Flow
-    J --> J1[Create Profile]
-    J --> J2[Update Profile]
-    J --> J3[Upload Avatar]
+    %% Alur Layanan Obrolan
+    I --> I1[Mulai Percakapan]
+    I --> I2[Dapatkan Riwayat Obrolan]
+    I --> I3[Dapatkan Respons AI]
 
-    %% IoT Service Flow
-    K --> K1[Get IoT Access]
-    K --> K2[Send IoT Data]
-    K --> K3[Get IoT Status]
+    %% Alur Layanan Profil
+    J --> J1[Buat Profil]
+    J --> J2[Perbarui Profil]
+    J --> J3[Dapatkan Profil]
 
-    %% Authentication States
-    C --> C1[Login]
-    C --> C2[Register]
-    C --> C3[Logout]
-    C --> C4[Check Token]
+    %% Alur Layanan IoT
+    K --> K1[Dapatkan Akses IoT]
+    K --> K2[Kirim Data IoT]
+    K --> K3[Dapatkan Status IoT]
 
-    %% Response Types
-    H3 --> R1[AI Generated Summary]
+    %% Jenis Respons
+    H3 --> R1[Ringkasan yang Dibuat AI]
     H4 --> R1
     I3 --> R1
 
-    %% Error Handling
-    B --> E1[401 Unauthorized]
-    E --> E2[403 Forbidden]
-    F --> E3[500 Server Error]
+    %% Penanganan Kesalahan
+    B --> E1[401 Tidak Diotorisasi]
+    E --> E2[403 Terlarang]
+    F --> E3[500 Kesalahan Server]
+```
+
+## Daftar Isi
+
+1. [Autentikasi](#autentikasi)
+2. [Manajemen Pengguna](#manajemen-pengguna)
+3. [Layanan Antropometri](#layanan-antropometri)
+4. [Layanan Obrolan](#layanan-obrolan)
+5. [Layanan Profil](#layanan-profil)
+6. [Layanan IoT](#layanan-iot)
+
+## Penanganan Kesalahan
+
+Semua titik akhir mengikuti format respons kesalahan yang konsisten:
+
+```json
+{
+  "error": "Deskripsi pesan kesalahan"
+}
+```
+
+Kode status HTTP umum:
+
+- 400 Permintaan Buruk: Parameter hilang atau tidak valid
+- 401 Tidak Diotorisasi: Autentikasi diperlukan atau token tidak valid
+- 403 Terlarang: Izin tidak mencukupi
+- 404 Tidak Ditemukan: Sumber daya tidak ditemukan
+- 500 Kesalahan Server Internal: Kesalahan sisi server
+
+## Header Autentikasi
+
+Untuk titik akhir yang dilindungi, sertakan token JWT di header Otorisasi:
+
+```
+Authorization: Bearer <jwt_token>
 ```
