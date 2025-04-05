@@ -17,6 +17,7 @@ export default class MiddlewareService {
       "/api/iot",
       "/api/me",
       "/api/profils/upload",
+      "/api/okx",
       "/api/iot/data",
       "/api/iot/access",
     ];
