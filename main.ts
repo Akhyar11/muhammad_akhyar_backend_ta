@@ -11,6 +11,7 @@ import profilRoute from "./src/profil/profil.route";
 import anthropometryIotRoute from "./src/anthropometry/iot/antropomerty.iot.route";
 import anthropometyRoute from "./src/anthropometry/antropomerty.route";
 import covertationRoute from "./src/groq/groq.route";
+import okxRoute from "./src/okx/okx.route";
 
 // Import middleware services
 import MiddlewareService from "./src/middleware/auth.middleware.service";
@@ -46,6 +47,7 @@ export class Server {
     this.app.use("/api", anthropometryIotRoute);
     this.app.use("/api", anthropometyRoute);
     this.app.use("/api", covertationRoute);
+    this.app.use("/api", okxRoute);
   }
 
   public getApp(): Application {
