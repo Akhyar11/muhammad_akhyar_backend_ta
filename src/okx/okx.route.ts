@@ -13,7 +13,7 @@ class OKXRoute {
 
   private initializeRoutes() {
     this.router.get("/okx/candles", this.okxController.getMarketData); // Mendapatkan semua profil
-    this.router.get("/okx/trigger", this.okxController.sendWebhook); // Mendapatkan semua profil
+    this.router.post("/okx/trigger", this.okxController.sendWebhook); // Mendapatkan semua profil
   }
 }
 
