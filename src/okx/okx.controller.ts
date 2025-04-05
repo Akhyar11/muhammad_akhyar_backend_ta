@@ -54,7 +54,7 @@ export default class OKXController {
       maxLag = 0,
     } = req.body;
 
-    if (!action || !symbol || !signalToken || !amount || !webhookUrl) {
+    if (!action || !symbol || !signalToken || !amount) {
       res.status(400).json({ message: "Missing required parameters" });
       return;
     }
@@ -69,7 +69,7 @@ export default class OKXController {
       orderPriceOffset: "",
       investmentType:
         action === "ENTER_LONG" ? "percentage_balance" : "percentage_position",
-      amount: amount.toString(),
+      amount,
     };
 
     try {
