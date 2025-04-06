@@ -47,21 +47,21 @@ export default class OKXController {
   async sendWebhook(req: Request, res: Response) {
     const {
       action,
-      symbol,
+      instrument,
       signalToken,
       amount,
       webhookUrl = "https://www.okx.com/algo/signal/trigger",
       maxLag = 0,
     } = req.body;
 
-    if (!action || !symbol || !signalToken || !amount) {
+    if (!action || !instrument || !signalToken || !amount) {
       res.status(400).json({ message: "Missing required parameters" });
       return;
     }
 
     const payload = {
       action,
-      instrument: symbol,
+      instrument,
       signalToken,
       timestamp: Date.now().toString(),
       maxLag,
