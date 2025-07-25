@@ -47,7 +47,7 @@ export const groqCreateSummaryAIAPI = async (message: string) => {
       max_completion_tokens: 4700,
       top_p: 1,
       stream: false,
-      response_format: { type: "json_object" },
+      // response_format: { type: "json_object" },
     });
 
     const summary = response.choices[0].message.content;
