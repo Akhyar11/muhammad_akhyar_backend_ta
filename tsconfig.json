@@ -9,6 +9,6 @@
     "outDir": "./dist",
     "rootDir": "./"
   },
-  "include": ["src", "jsonORM", "main.ts", "main-development.ts"],
+  "include": ["src", "jsonORM", "main", "main-development"],
   "exclude": ["node_modules"]
 }

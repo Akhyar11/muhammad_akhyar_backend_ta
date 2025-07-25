@@ -143,7 +143,7 @@ export const groqCreateSummaryKMS = async (userId: string) => {
 export const groqCreateSummary = async (prompt: string) => {
   try {
     const response = await groq.chat.completions.create({
-      model: "qwen-2.5-32b",
+      model: "llama-3.3-70b-versatile",
       messages: [
         { role: "system", content: jsonResponseFormat },
         { role: "user", content: prompt },
@@ -167,7 +167,7 @@ function removeThinkTag(content: string) {
   return content.replace(/<think>[\s\S]*?<\/think>/g, "");
 }
 
-export const groqCreateSummaryAnthropometry = async (userId: string) => {
+export const groqCreateSummaryAnthropometry = async (userId?: string) => {
   const data = await anthropometryModel.search("userId", "==", userId);
   const userData = await userModel.search("id", "==", userId);
 
@@ -206,6 +206,13 @@ export const groqCreateSummaryAnthropometry = async (userId: string) => {
   prompt += `Gunakan Bahasa Indonesia dalam memberikan resposne`;
 
   let summary = await groqCreateSummary(prompt);
+  summary = removeThinkTag(summary as string);
+
+  return summary;
+};
+
+export const groqCreateSummaryAPI = async (promnt: string) => {
+  let summary = await groqCreateSummary(promnt);
   summary = removeThinkTag(summary as string);
 
   return summary;

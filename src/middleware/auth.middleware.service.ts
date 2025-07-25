@@ -21,6 +21,7 @@ export default class MiddlewareService {
       "/api/okx/trigger",
       "/api/iot/data",
       "/api/iot/access",
+      "/api/iot/summary",
     ];
 
     if (notAuthEndpoints.includes(req.path)) {

@@ -13,6 +13,7 @@ class AnthropometryIotRoute {
 
   private initializeRoutes() {
     this.router.get("/iot/data", this.anthropometryIotController.setData);
+    this.router.post("/iot/summary", this.anthropometryIotController.summary);
   }
 }
 
