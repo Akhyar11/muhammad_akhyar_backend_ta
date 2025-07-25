@@ -31,6 +31,33 @@ export const groqService = {
   },
 };
 
+export const groqCreateSummaryAIAPI = async (message: string) => {
+  try {
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content:
+            "Kamu adalah dokter ahli antropomerty data, berikan summary kesahatan sesuai kebutuhan pengguna",
+        },
+        { role: "user", content: message },
+      ],
+      temperature: 1,
+      max_completion_tokens: 4700,
+      top_p: 1,
+      stream: false,
+      response_format: { type: "json_object" },
+    });
+
+    const summary = response.choices[0].message.content;
+    return summary;
+  } catch (error) {
+    console.log(error);
+    return "Error";
+  }
+};
+
 export const groqCreateSummaryKMS = async (userId: string) => {
   try {
     const data = await anthropometryModel.search("userId", "==", userId);

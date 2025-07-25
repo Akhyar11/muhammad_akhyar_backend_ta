@@ -22,6 +22,7 @@ export default class MiddlewareService {
       "/api/iot/data",
       "/api/iot/access",
       "/api/iot/summary",
+      "/api/summary",
     ];
 
     if (notAuthEndpoints.includes(req.path)) {

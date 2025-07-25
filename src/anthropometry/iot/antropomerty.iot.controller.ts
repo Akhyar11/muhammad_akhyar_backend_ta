@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import logger from "../../utils/logger.util"; // Import the logger
 import { userModel } from "../../user/user.model";
 import {
+  groqCreateSummaryAIAPI,
   groqCreateSummaryAnthropometry,
   groqCreateSummaryAPI,
   groqCreateSummaryKMS,
@@ -23,6 +24,21 @@ export default class AnthropometryIotController {
 
       console.log(promnt);
       let summary = await groqCreateSummaryAPI(promnt);
+
+      res.status(200).json({ summary });
+    } catch (error) {
+      console.log(error);
+      logger.error("Failed to save data in getData", { error });
+      res.status(500).json({ message: "Internal server error", error });
+    }
+  }
+
+  async summaryAI(req: Request, res: Response) {
+    try {
+      const { message } = req.body;
+
+      // console.log(promnt);
+      let summary = await groqCreateSummaryAIAPI(message);
 
       res.status(200).json({ summary });
     } catch (error) {
